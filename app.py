@@ -1,9 +1,10 @@
-"""
+r"""
 Demo: Prediccion de efectos adversos de farmacos
 Ejecutar: venv\Scripts\streamlit run app.py
 """
 
 import sys
+import json
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -15,6 +16,7 @@ ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 from model import load_finetuned_model
 from patient_text import build_patient_text, MAX_LEN
+from translations import translate_effect
 
 DATA_DIR = ROOT / "data" / "processed"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -85,7 +87,59 @@ def load_test_cases():
         return None
     return pd.read_csv(path, dtype=str).fillna("")
 
-tab_pred, tab_test = st.tabs(["🔮 Predecir paciente nuevo", "📋 Casos reales de test (30%)"])
+@st.cache_data
+def load_sider():
+    """Carga SIDER 4.1 para validacion: (name_to_stitch, stitch_to_effects).
+    Si los archivos no existen, devuelve diccionarios vacios (no rompe la app)."""
+    raw_dir = ROOT / "data" / "raw"
+    drug_names_path = raw_dir / "sider_drug_names.tsv"
+    se_path = raw_dir / "sider_meddra_all_se.tsv"
+
+    if not drug_names_path.exists() or not se_path.exists():
+        return {}, {}
+
+    # drug name -> stitch id
+    dn = pd.read_csv(drug_names_path, sep="\t", header=None, names=["stitch_id", "drug_name"])
+    name_to_stitch = dict(zip(dn["drug_name"].str.upper().str.strip(), dn["stitch_id"]))
+
+    # stitch id -> set de efectos (solo PT = Preferred Terms), en Title Case
+    se = pd.read_csv(se_path, sep="\t", header=None,
+                     names=["stitch_flat", "stitch_stereo", "umls_se",
+                            "meddra_type", "umls_meddra", "side_effect"])
+    se_pt = se[se["meddra_type"] == "PT"].copy()
+    se_pt["side_effect"] = se_pt["side_effect"].str.strip().str.title()
+
+    from collections import defaultdict
+    sider_effects = defaultdict(set)
+    for stitch, effect in zip(se_pt["stitch_flat"], se_pt["side_effect"]):
+        sider_effects[stitch].add(effect)
+
+    return name_to_stitch, dict(sider_effects)
+
+# Sufijos de sales farmaceuticas: FAERS usa "METFORMIN HYDROCHLORIDE",
+# SIDER el ingrediente base "metformin". Se prueban para mejorar el mapeo.
+SALT_SUFFIXES = [" HYDROCHLORIDE", " SODIUM", " POTASSIUM", " CALCIUM", " MESYLATE",
+                 " MALEATE", " TARTRATE", " FUMARATE", " ACETATE", " SULFATE",
+                 " CITRATE", " BESYLATE", " SUCCINATE"]
+
+def map_drug_to_sider(drug_name, name_to_stitch):
+    """Mapea un nombre de farmaco FAERS a su STITCH id en SIDER.
+    Prueba el nombre completo y, si falla, va quitando sufijos de sales."""
+    drug_upper = drug_name.upper().strip()
+    stitch_id = name_to_stitch.get(drug_upper)
+    if not stitch_id:
+        for suffix in SALT_SUFFIXES:
+            if drug_upper.endswith(suffix):
+                stitch_id = name_to_stitch.get(drug_upper[:-len(suffix)].strip())
+                if stitch_id:
+                    break
+    return stitch_id
+
+tab_pred, tab_test, tab_analysis = st.tabs([
+    "🔮 Predecir paciente nuevo",
+    "📋 Casos reales de test (30%)",
+    "📊 Analisis del modelo",
+])
 
 # ── Sidebar: mismos atributos con los que se entreno el modelo ────────────────
 st.sidebar.header("Datos del paciente")
@@ -106,13 +160,22 @@ indication_free = st.sidebar.text_input("Otra indicacion (opcional)",
 if indication_free.strip():
     indications_input = indications_input + [indication_free.strip().title()]
 
+st.sidebar.markdown("---")
+sensitivity = st.sidebar.slider(
+    "Sensibilidad del modelo", 0.1, 1.0, 0.5, 0.05,
+    help="Mas alto = mas efectos predichos (mas recall, menos precision). "
+         "0.5 = umbrales calibrados originales.")
+
 predict_btn = st.sidebar.button("Predecir efectos adversos", type="primary")
 
 # ── Pestania 1: Prediccion ────────────────────────────────────────────────────
 with tab_pred:
     if predict_btn and drug_input:
         with st.spinner("Analizando..."):
-            results, input_text = predict(model, tokenizer, label_names, thresholds,
+            # Sensibilidad: factor sobre los umbrales. 0.5 -> factor 1.0 (umbral
+            # original); mas sensibilidad -> umbral mas bajo -> mas efectos predichos.
+            thresholds_adj = np.clip(thresholds * (1.5 - sensitivity), 0.0, 1.0)
+            results, input_text = predict(model, tokenizer, label_names, thresholds_adj,
                                            drug_input, age_input, sex_input, weight_input,
                                            other_drugs_input, indications_input)
 
@@ -130,6 +193,7 @@ with tab_pred:
             st.subheader("Efectos adversos predichos")
             if predicted:
                 pred_df = pd.DataFrame(predicted)[["effect", "probability"]]
+                pred_df["effect"] = pred_df["effect"].apply(translate_effect)
                 pred_df["probability"] = pred_df["probability"].map("{:.1%}".format)
                 pred_df.columns = ["Efecto adverso", "Probabilidad"]
                 st.dataframe(pred_df, use_container_width=True, hide_index=True)
@@ -141,7 +205,7 @@ with tab_pred:
             top15 = results[:15]
             fig = go.Figure(go.Bar(
                 x=[r["probability"] for r in top15],
-                y=[r["effect"] for r in top15],
+                y=[translate_effect(r["effect"]) for r in top15],
                 orientation="h",
                 marker_color=["#e74c3c" if r["predicted"] else "#3498db" for r in top15],
                 text=[f"{r['probability']:.1%}" for r in top15],
@@ -159,9 +223,87 @@ with tab_pred:
 
         with st.expander("Tabla completa de probabilidades"):
             all_df = pd.DataFrame(results)[["effect", "probability", "predicted"]]
+            all_df["effect"] = all_df["effect"].apply(translate_effect)
             all_df["probability"] = all_df["probability"].map("{:.3f}".format)
             all_df.columns = ["Efecto adverso", "Probabilidad", "Predicho"]
             st.dataframe(all_df, use_container_width=True, hide_index=True)
+
+        # ── Validacion contra SIDER 4.1 ──────────────────────────────────────
+        st.markdown("---")
+        st.subheader("🔬 Validacion contra SIDER 4.1")
+
+        name_to_stitch, sider_effects = load_sider()
+
+        if not name_to_stitch:
+            st.warning("Archivos SIDER no encontrados en data/raw/. Coloca "
+                       "sider_drug_names.tsv y sider_meddra_all_se.tsv ahi.")
+        else:
+            stitch_id = map_drug_to_sider(drug_input, name_to_stitch)
+
+            if not stitch_id:
+                st.info(f"⚠️ '{drug_input}' no se encontro en SIDER 4.1. No todos los "
+                        "farmacos estan en la base de datos (1430 farmacos disponibles).")
+            else:
+                known_effects = sider_effects.get(stitch_id, set())
+                label_set = set(label_names)
+                known_in_vocab = known_effects & label_set
+
+                predicted_effects = set(r["effect"] for r in results if r["predicted"])
+                top15_effects = set(r["effect"] for r in results[:15])
+
+                if not known_in_vocab:
+                    st.info(f"SIDER tiene {len(known_effects)} registros para este "
+                            f"farmaco pero ninguno coincide con las {len(label_names)} "
+                            "etiquetas del modelo.")
+                else:
+                    tp_pred = predicted_effects & known_in_vocab
+                    tp_top15 = top15_effects & known_in_vocab
+
+                    precision_pred = len(tp_pred) / len(predicted_effects) if predicted_effects else 0
+                    recall_pred = len(tp_pred) / len(known_in_vocab)
+                    precision_top15 = len(tp_top15) / len(top15_effects) if top15_effects else 0
+                    recall_top15 = len(tp_top15) / len(known_in_vocab)
+
+                    st.markdown(
+                        f"**SIDER documenta {len(known_effects)} efectos para este farmaco, "
+                        f"de los cuales {len(known_in_vocab)} estan en las "
+                        f"{len(label_names)} etiquetas del modelo.**")
+
+                    met1, met2, met3, met4 = st.columns(4)
+                    met1.metric("Precision (predichos)", f"{precision_pred:.0%}")
+                    met2.metric("Recall (predichos)", f"{recall_pred:.0%}")
+                    met3.metric("Precision (top 15)", f"{precision_top15:.0%}")
+                    met4.metric("Recall (top 15)", f"{recall_top15:.0%}")
+
+                    st.markdown("#### Comparacion detallada — Top 15 del modelo vs SIDER")
+                    comparison_rows = []
+                    for r in results[:15]:
+                        effect = r["effect"]
+                        in_sider = effect in known_in_vocab
+                        was_predicted = r["predicted"]
+                        comparison_rows.append({
+                            "Efecto": translate_effect(effect),
+                            "Probabilidad": f"{r['probability']:.1%}",
+                            "Predicho": "✅ Si" if was_predicted else "❌ No",
+                            "En SIDER": "✅ Confirmado" if in_sider else "⚠️ No registrado",
+                            "Resultado": "✅ Acierto" if (was_predicted and in_sider) else
+                                         "🔍 Probable" if (not was_predicted and in_sider) else
+                                         "⚠️ Sin evidencia SIDER" if was_predicted else "—",
+                        })
+                    st.dataframe(pd.DataFrame(comparison_rows),
+                                 use_container_width=True, hide_index=True)
+
+                    missed = known_in_vocab - top15_effects
+                    if missed:
+                        with st.expander(f"Efectos en SIDER no detectados por el modelo ({len(missed)})"):
+                            missed_with_prob = [
+                                {"Efecto": translate_effect(r["effect"]), "Probabilidad": f"{r['probability']:.1%}"}
+                                for r in results if r["effect"] in missed
+                            ]
+                            st.dataframe(pd.DataFrame(missed_with_prob),
+                                         use_container_width=True, hide_index=True)
+                            st.caption("Estos efectos estan documentados en SIDER pero el "
+                                       "modelo les asigno baja probabilidad.")
 
     elif predict_btn and not drug_input:
         st.warning("Por favor selecciona o escribe un farmaco.")
@@ -199,10 +341,19 @@ with tab_test:
         if only_hits:
             view = view[view["n_aciertos"] > 0]
 
+        # Traducir SOLO las columnas de reacciones (efectos). Farmaco e indicaciones
+        # quedan en ingles (nombres internacionales / no son efectos del vocabulario).
+        def translate_pipe(s):
+            return "|".join(translate_effect(e) for e in s.split("|")) if s else s
+
+        view_show = view.copy()
+        view_show["reacciones_reales"] = view_show["reacciones_reales"].apply(translate_pipe)
+        view_show["reacciones_predichas"] = view_show["reacciones_predichas"].apply(translate_pipe)
+
         st.dataframe(
-            view[["primaryid", "edad", "sexo", "peso_kg", "farmaco",
-                  "medicaciones_previas", "indicaciones",
-                  "reacciones_reales", "reacciones_predichas", "n_aciertos"]],
+            view_show[["primaryid", "edad", "sexo", "peso_kg", "farmaco",
+                       "medicaciones_previas", "indicaciones",
+                       "reacciones_reales", "reacciones_predichas", "n_aciertos"]],
             use_container_width=True, hide_index=True, height=350
         )
 
@@ -222,18 +373,187 @@ with tab_test:
             with d1:
                 st.markdown("#### ✅ Aciertos (TP)")
                 for e in (row["aciertos_TP"].split("|") if row["aciertos_TP"] else []):
-                    st.markdown(f"- {e}")
+                    st.markdown(f"- {translate_effect(e)}")
                 if not row["aciertos_TP"]:
                     st.caption("Ninguno")
             with d2:
                 st.markdown("#### ❌ No detectadas (FN)")
                 for e in (row["no_detectadas_FN"].split("|") if row["no_detectadas_FN"] else []):
-                    st.markdown(f"- {e}")
+                    st.markdown(f"- {translate_effect(e)}")
                 if not row["no_detectadas_FN"]:
                     st.caption("Ninguna")
             with d3:
                 st.markdown("#### ⚠️ Predichas de mas (FP)")
                 for e in (row["falsos_positivos_FP"].split("|") if row["falsos_positivos_FP"] else []):
-                    st.markdown(f"- {e}")
+                    st.markdown(f"- {translate_effect(e)}")
                 if not row["falsos_positivos_FP"]:
                     st.caption("Ninguna")
+
+# ── Pestania 3: Analisis del modelo (temas de la materia) ─────────────────────
+with tab_analysis:
+    st.markdown("Resultados de evaluacion y conceptos de la materia aplicados en el "
+                "proyecto. Todos los numeros provienen de correr los scripts de `src/`.")
+
+    # ── Seccion 1: Comparativa de modelos ─────────────────────────────────────
+    st.markdown("---")
+    st.subheader("1 · Comparativa de modelos")
+    comparativa = pd.DataFrame({
+        "Modelo": [
+            "Naive Bayes (MultinomialNB)",
+            "KNN (k=5, coseno)",
+            "Random Forest + TF-IDF",
+            "Random Forest + BioBERT embeddings",
+            "BioBERT fine-tuning + umbral optimo",
+        ],
+        "F1 macro":     [0.0001, 0.0006, 0.0389, 0.130, "Mejor"],
+        "F1 micro":     [0.0006, 0.0012, 0.0485, 0.150, "Mejor"],
+        "F1 samples":   [0.0006, 0.0006, 0.0455, 0.127, "Mejor"],
+        "Hamming loss": [0.0217, 0.0218, 0.2447, 0.059, "Menor"],
+        "Tema de la materia": [
+            "Unidad 5 — Clasificacion de texto",
+            "Unidad 3 — Clasificadores supervisados",
+            "Unidad 3 — Ensemble methods",
+            "Unidad 5 — Word embeddings + Unidad 3",
+            "Unidad 5 — Transformers / BERT",
+        ],
+    })
+    st.dataframe(comparativa, use_container_width=True, hide_index=True)
+
+    f1_models = ["Naive Bayes", "KNN (k=5)", "RF + TF-IDF", "RF + BioBERT"]
+    f1_values = [0.0001, 0.0006, 0.0389, 0.130]
+    fig_cmp = go.Figure(go.Bar(
+        x=f1_models, y=f1_values,
+        marker_color=["#bdc3c7", "#95a5a6", "#3498db", "#2ecc71"],
+        text=[f"{v:.4f}" for v in f1_values], textposition="outside",
+    ))
+    fig_cmp.update_layout(height=360, yaxis_title="F1 macro",
+                          margin=dict(l=0, r=0, t=20, b=0), showlegend=False)
+    st.plotly_chart(fig_cmp, use_container_width=True)
+    st.info(
+        "Los clasificadores clasicos (Naive Bayes y KNN) no logran predecir efectos "
+        "adversos en este problema debido al desbalance severo de clases (97 etiquetas, "
+        "densidad ~2%). Random Forest mejora significativamente usando ensemble y "
+        "class_weight='balanced'. El salto principal viene con BioBERT, que aporta "
+        "comprension semantica del texto biomedico.")
+
+    # ── Seccion 2: Validacion cruzada ─────────────────────────────────────────
+    st.markdown("---")
+    st.subheader("2 · Validacion cruzada (5-Fold) — Random Forest")
+    cv_folds = [1, 2, 3, 4, 5]
+    cv_f1 = [0.0323, 0.0416, 0.0368, 0.0328, 0.0317]
+    cv_mean = 0.0350
+    colc1, colc2 = st.columns([1, 2])
+    with colc1:
+        st.dataframe(pd.DataFrame({"Fold": cv_folds, "F1 macro": cv_f1}),
+                     use_container_width=True, hide_index=True)
+    with colc2:
+        fig_cv = go.Figure(go.Bar(
+            x=[f"Fold {f}" for f in cv_folds], y=cv_f1, marker_color="#3498db",
+            text=[f"{v:.4f}" for v in cv_f1], textposition="outside"))
+        fig_cv.add_hline(y=cv_mean, line_dash="dash", line_color="red",
+                         annotation_text=f"Media={cv_mean:.4f}")
+        fig_cv.update_layout(height=320, yaxis_title="F1 macro",
+                             margin=dict(l=0, r=0, t=20, b=0), showlegend=False)
+        st.plotly_chart(fig_cv, use_container_width=True)
+    st.info(
+        "La validacion cruzada con 5 pliegues da un F1 macro promedio de 0.035 ± 0.004. "
+        "La baja varianza entre folds indica que el modelo es estable, aunque el "
+        "rendimiento absoluto es limitado por el desbalance de clases. Esto justifica "
+        "el uso de modelos mas sofisticados como BioBERT.")
+
+    # ── Seccion 3: Curva de aprendizaje ───────────────────────────────────────
+    st.markdown("---")
+    st.subheader("3 · Curva de aprendizaje")
+    lc_png = ROOT / "outputs" / "figures" / "learning_curve_rf.png"
+    n_samples = [500, 1000, 2000, 3000, 3692]
+    train_f1 = [0.7303, 0.5597, 0.4439, 0.3803, 0.3563]
+    test_f1  = [0.0232, 0.0287, 0.0306, 0.0308, 0.0322]
+    fig_lc = go.Figure()
+    fig_lc.add_trace(go.Scatter(x=n_samples, y=train_f1, mode="lines+markers",
+                                name="F1 entrenamiento", line=dict(color="#3498db")))
+    fig_lc.add_trace(go.Scatter(x=n_samples, y=test_f1, mode="lines+markers",
+                                name="F1 test", line=dict(color="#e74c3c")))
+    fig_lc.update_layout(height=380, xaxis_title="Cantidad de muestras de entrenamiento",
+                         yaxis_title="F1 macro", margin=dict(l=0, r=0, t=20, b=0))
+    st.plotly_chart(fig_lc, use_container_width=True)
+    if lc_png.exists():
+        with st.expander("Ver imagen generada por el script (learning_curve_rf.png)"):
+            st.image(str(lc_png), use_container_width=True)
+    st.info(
+        "La curva de aprendizaje muestra un gap significativo entre el F1 en "
+        "entrenamiento (0.356) y en test (0.032), lo que indica overfitting. El modelo "
+        "memoriza los datos de entrenamiento pero no generaliza bien. Con mas datos el "
+        "gap se reduce pero sigue siendo grande. Esto es esperable en Random Forest con "
+        "97 etiquetas y pocas muestras por clase, y es otra razon para usar BioBERT que "
+        "generaliza mejor gracias al pre-entrenamiento en texto biomedico.")
+
+    # ── Seccion 4: Desbalance de clases ───────────────────────────────────────
+    st.markdown("---")
+    st.subheader("4 · Desbalance de clases")
+    y_path = DATA_DIR / "Y.csv"
+    if not y_path.exists():
+        st.warning("No se encontro data/processed/Y.csv para mostrar la distribucion.")
+    else:
+        Y = pd.read_csv(y_path)
+        label_counts = Y.sum().sort_values(ascending=False)
+        top15 = label_counts.head(15)
+        bottom15 = label_counts.tail(15)
+        cold1, cold2 = st.columns(2)
+        with cold1:
+            fig_t = go.Figure(go.Bar(
+                x=top15.values[::-1],
+                y=[translate_effect(l) for l in top15.index[::-1]],
+                orientation="h", marker_color="#2ecc71"))
+            fig_t.update_layout(height=420, title="Top 15 mas frecuentes",
+                                margin=dict(l=0, r=0, t=30, b=0))
+            st.plotly_chart(fig_t, use_container_width=True)
+        with cold2:
+            fig_b = go.Figure(go.Bar(
+                x=bottom15.values[::-1],
+                y=[translate_effect(l) for l in bottom15.index[::-1]],
+                orientation="h", marker_color="#e67e22"))
+            fig_b.update_layout(height=420, title="15 menos frecuentes",
+                                margin=dict(l=0, r=0, t=30, b=0))
+            st.plotly_chart(fig_b, use_container_width=True)
+    st.info(
+        "El dataset presenta un desbalance severo: las etiquetas mas frecuentes superan "
+        "los 200 casos mientras que las menos frecuentes apenas llegan a 50. Se abordo "
+        "con class_weight='balanced' en Random Forest y pos_weight por etiqueta en "
+        "BioBERT (BCEWithLogitsLoss), pero sigue siendo el principal desafio del proyecto.")
+
+    # ── Seccion 5: NER ────────────────────────────────────────────────────────
+    st.markdown("---")
+    st.subheader("5 · NER — Extraccion de entidades")
+    ner_summary_path = ROOT / "outputs" / "ner_summary.json"
+    ner_csv_path = ROOT / "outputs" / "ner_entities.csv"
+    if not ner_summary_path.exists():
+        st.warning("No se encontro outputs/ner_summary.json. Generarlo con: "
+                   "venv\\Scripts\\python.exe src\\ner_demo.py")
+    else:
+        with open(ner_summary_path, encoding="utf-8") as f:
+            ner = json.load(f)
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Indicaciones procesadas", ner.get("indicaciones_procesadas", "—"))
+        m2.metric("Entidades encontradas", ner.get("entidades_totales", "—"))
+        m3.metric("Entidades unicas", ner.get("entidades_unicas", "—"))
+        st.caption(f"Modelo NER: {ner.get('modelo', '—')}")
+
+        top = ner.get("top_20", {})
+        if top:
+            fig_ner = go.Figure(go.Bar(
+                x=list(top.values())[::-1], y=list(top.keys())[::-1],
+                orientation="h", marker_color="#9b59b6"))
+            fig_ner.update_layout(height=480, title="Top 20 entidades mas frecuentes",
+                                  margin=dict(l=0, r=0, t=30, b=0))
+            st.plotly_chart(fig_ner, use_container_width=True)
+
+        if ner_csv_path.exists():
+            with st.expander("Ejemplos de entidades extraidas (primeras 20)"):
+                st.dataframe(pd.read_csv(ner_csv_path).head(20),
+                             use_container_width=True, hide_index=True)
+    st.info(
+        "Se aplico reconocimiento de entidades nombradas (NER) sobre 500 indicaciones "
+        "terapeuticas usando spaCy. Este modulo demuestra la capacidad de extraccion de "
+        "informacion del pipeline, complementando los campos estructurados de FAERS con "
+        "analisis de texto libre.")
+

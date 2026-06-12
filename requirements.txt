@@ -1,12 +1,25 @@
+# Core científico
 pandas
 numpy
 scikit-learn
+scipy
+
+# Visualización
 matplotlib
 seaborn
 plotly
 networkx
-torch==2.6.0+cu124
-torchvision==0.21.0+cu124
-torchaudio==2.6.0+cu124
+
+# Deep Learning — instalar con el wheel correcto para tu hardware:
+#   GPU (CUDA 12.4): pip install torch==2.6.0+cu124 --index-url https://download.pytorch.org/whl/cu124
+#   CPU solamente:   pip install torch
+torch
 transformers
+accelerate
+
+# App web
+streamlit
+
+# NLP general (el modelo en_core_web_sm se instala aparte:
+#   python -m spacy download en_core_web_sm)
 spacy

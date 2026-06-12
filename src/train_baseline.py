@@ -109,3 +109,62 @@ plt.tight_layout()
 out = OUTPUTS_DIR / "figures" / "baseline_metrics.png"
 plt.savefig(out, dpi=150)
 print(f"Grafico guardado en: {out}")
+
+# ── Validacion cruzada (5-Fold) — Unidad 3 ────────────────────────────────────
+from sklearn.model_selection import KFold
+
+print("\n=== Validacion cruzada (5-Fold) sobre el train set ===")
+cv_model = MultiOutputClassifier(
+    RandomForestClassifier(n_estimators=200, class_weight="balanced",
+                           random_state=RANDOM_SEED, n_jobs=-1)
+)
+# cross_val_score no soporta F1 macro multilabel directamente -> loop manual
+kf = KFold(n_splits=5, shuffle=True, random_state=RANDOM_SEED)
+cv_scores = []
+for fold, (tr_idx, val_idx) in enumerate(kf.split(X_train), 1):
+    X_cv_tr,  X_cv_val  = X_train.iloc[tr_idx], X_train.iloc[val_idx]
+    Y_cv_tr,  Y_cv_val  = Y_train.iloc[tr_idx], Y_train.iloc[val_idx]
+    cv_model.fit(X_cv_tr, Y_cv_tr)
+    f1 = f1_score(Y_cv_val, cv_model.predict(X_cv_val), average="macro", zero_division=0)
+    cv_scores.append(f1)
+    print(f"  Fold {fold}: F1 macro = {f1:.4f}")
+print(f"\n  Media: {np.mean(cv_scores):.4f} +/- {np.std(cv_scores):.4f}")
+
+# ── Curva de aprendizaje — Unidad 3 ───────────────────────────────────────────
+print("\nGenerando curva de aprendizaje...")
+train_sizes_abs = [s for s in [500, 1000, 2000, 3000, 4000] if s < len(X_train)]
+train_sizes_abs.append(len(X_train))
+train_f1s, val_f1s = [], []
+for size in train_sizes_abs:
+    X_sub, Y_sub = X_train.iloc[:size], Y_train.iloc[:size]
+    m = MultiOutputClassifier(
+        RandomForestClassifier(n_estimators=100, class_weight="balanced",
+                               random_state=RANDOM_SEED, n_jobs=-1)
+    )
+    m.fit(X_sub, Y_sub)
+    f1_train = f1_score(Y_sub, m.predict(X_sub), average="macro", zero_division=0)
+    f1_test  = f1_score(Y_test, m.predict(X_test), average="macro", zero_division=0)
+    train_f1s.append(f1_train)
+    val_f1s.append(f1_test)
+    print(f"  n={size:5d} -> train F1={f1_train:.4f}, test F1={f1_test:.4f}")
+
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(train_sizes_abs, train_f1s, "o-", label="F1 en entrenamiento", color="steelblue")
+ax.plot(train_sizes_abs, val_f1s,   "o-", label="F1 en test",          color="coral")
+ax.set_xlabel("Cantidad de muestras de entrenamiento")
+ax.set_ylabel("F1 macro")
+ax.set_title("Curva de aprendizaje — Random Forest baseline")
+ax.legend(); ax.grid(True, alpha=0.3)
+plt.tight_layout()
+lc_out = OUTPUTS_DIR / "figures" / "learning_curve_rf.png"
+lc_out.parent.mkdir(parents=True, exist_ok=True)
+plt.savefig(lc_out, dpi=150)
+print(f"\nCurva de aprendizaje guardada en: {lc_out}")
+
+gap = train_f1s[-1] - val_f1s[-1]
+if gap > 0.15:
+    print(f"Diagnostico: posible OVERFITTING (gap train-test = {gap:.3f}).")
+elif val_f1s[-1] < 0.1:
+    print(f"Diagnostico: posible UNDERFITTING (F1 test bajo = {val_f1s[-1]:.3f}).")
+else:
+    print(f"Diagnostico: modelo balanceado (gap = {gap:.3f}).")

@@ -26,7 +26,7 @@ label_names = Y.columns.tolist()
 X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y, test_size=TEST_SIZE, random_state=RANDOM_SEED
 )
-X_bb_train, X_bb_test = X_bb.iloc[X_train.index], X_bb.iloc[X_test.index]
+X_bb_train, X_bb_test = X_bb.loc[X_train.index], X_bb.loc[X_test.index]
 
 def evaluate(model, X_tr, X_te, Y_tr, Y_te, name):
     print(f"\nEntrenando {name}...")

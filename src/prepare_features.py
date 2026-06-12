@@ -111,6 +111,9 @@ Y_df_aligned.to_csv(DATA_PROCESSED / "Y.csv", index=False)
 # Guardar índices de split para que los demás scripts usen el mismo
 np.save(DATA_PROCESSED / "train_idx.npy", train_idx.to_numpy())
 np.save(DATA_PROCESSED / "test_idx.npy",  test_idx.to_numpy())
+# Archivo único con ambos índices (conveniencia para otros scripts)
+np.savez(DATA_PROCESSED / "split_indices.npz",
+         train_idx=train_idx.to_numpy(), test_idx=test_idx.to_numpy())
 
 # Guardar transformadores para reutilizar en inference
 with open(DATA_PROCESSED / "tfidf.pkl", "wb") as f:

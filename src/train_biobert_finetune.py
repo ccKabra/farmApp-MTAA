@@ -146,7 +146,8 @@ def evaluate(model, loader, threshold=THRESHOLD):
 history = {"train_loss": [], "val_f1_macro": [], "val_f1_micro": [], "val_f1_samples": []}
 
 print(f"\nIniciando fine-tuning: {EPOCHS} epocas, LR={LR}, batch={BATCH_TRAIN}")
-print(f"Device: {DEVICE.upper()} — {torch.cuda.get_device_name(0)}\n")
+gpu_name = torch.cuda.get_device_name(0) if DEVICE == "cuda" else "CPU"
+print(f"Device: {DEVICE.upper()} — {gpu_name}\n")
 
 for epoch in range(1, EPOCHS + 1):
     model.train()

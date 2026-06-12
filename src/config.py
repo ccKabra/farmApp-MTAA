@@ -43,5 +43,8 @@ EXTENDED_EPOCHS = 10
 
 # Model
 BIOBERT_MODEL = "dmis-lab/biobert-base-cased-v1.2"
-import torch
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+try:
+    import torch
+    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+except ImportError:
+    DEVICE = "cpu"
