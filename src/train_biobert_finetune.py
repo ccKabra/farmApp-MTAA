@@ -1,6 +1,7 @@
 """
 Etapa 5: Fine-tuning BioBERT como clasificador multi-label.
-Entrada: texto "drug: X. indication: Y" -> 98 etiquetas binarias
+Entrada: texto canonico del paciente (edad, sexo, peso, farmaco, medicaciones
+concomitantes, indicacion) definido en patient_text.py -> etiquetas binarias
 GPU: RTX 4070 Ti SUPER (CUDA)
 
 Output: models/biobert_finetuned/, outputs/figures/finetune_metrics.png
@@ -17,13 +18,16 @@ from sklearn.metrics import f1_score, precision_score, recall_score, hamming_los
 from collections import Counter
 import matplotlib.pyplot as plt
 from pathlib import Path
-from config import DATA_PROCESSED, MODELS_DIR, OUTPUTS_DIR, BIOBERT_MODEL, DEVICE, RANDOM_SEED, TEST_SIZE
+from config import (DATA_PROCESSED, MODELS_DIR, OUTPUTS_DIR, BIOBERT_MODEL, DEVICE,
+                    RANDOM_SEED, TEST_SIZE, BASE_EPOCHS, POS_WEIGHT_CAP)
+from model import BioBERTClassifier
+from patient_text import row_to_text, MAX_LEN
+from labels import build_label_vocab
 
 # ── Hiperparámetros ───────────────────────────────────────────────────────────
-MAX_LEN   = 128
 BATCH_TRAIN = 32
 BATCH_EVAL  = 64
-EPOCHS    = 5
+EPOCHS    = BASE_EPOCHS
 LR        = 2e-5
 THRESHOLD = 0.5   # umbral para convertir probabilidad a etiqueta binaria
 
@@ -52,50 +56,21 @@ class FAERSDataset(Dataset):
             "labels":         self.labels[idx]
         }
 
-# ── Modelo ────────────────────────────────────────────────────────────────────
-class BioBERTClassifier(nn.Module):
-    def __init__(self, bert_model, num_labels, dropout=0.3):
-        super().__init__()
-        self.bert = bert_model
-        hidden = self.bert.config.hidden_size
-        self.classifier = nn.Sequential(
-            nn.Dropout(dropout),
-            nn.Linear(hidden, 256),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(256, num_labels)
-        )
-
-    def forward(self, input_ids, attention_mask):
-        out = self.bert(input_ids=input_ids, attention_mask=attention_mask)
-        cls = out.last_hidden_state[:, 0, :]   # token [CLS]
-        return self.classifier(cls)
 
 # ── Cargar datos ──────────────────────────────────────────────────────────────
 print("Cargando datos...")
 df = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 df["age_years"] = pd.to_numeric(df["age_years"], errors="coerce")
 
-MIN_REACTION_FREQ = 50
-all_reac = [r for row in df["reactions"].dropna() for r in row.split("|")]
-freq_reac = {r for r, n in Counter(all_reac).items() if n >= MIN_REACTION_FREQ}
-
-df["reaction_list"] = df["reactions"].apply(
-    lambda s: [r for r in s.split("|") if r in freq_reac] if pd.notna(s) else []
-)
-mask = df["reaction_list"].apply(len) > 0
-df = df[mask].reset_index(drop=True)
-
-label_names = sorted(freq_reac)
+df, label_names = build_label_vocab(df)
 label2idx = {l: i for i, l in enumerate(label_names)}
 num_labels = len(label_names)
 print(f"Casos: {len(df):,}  |  Etiquetas: {num_labels}")
 
-# Texto de entrada
-texts = (
-    "drug: " + df["drug"].fillna("unknown").str[:100] +
-    ". indication: " + df["indications"].fillna("unknown").str[:200]
-).tolist()
+# Texto de entrada: representacion canonica del paciente (misma en inferencia)
+df["weight_kg"] = pd.to_numeric(df.get("weight_kg"), errors="coerce")
+texts = df.apply(row_to_text, axis=1).tolist()
+print(f"Ejemplo de entrada: {texts[0]}")
 
 # Matriz Y
 Y = np.zeros((len(df), num_labels), dtype=np.float32)
@@ -132,10 +107,14 @@ scheduler = get_linear_schedule_with_warmup(
     optimizer, num_warmup_steps=total_steps // 10, num_training_steps=total_steps
 )
 
-# Pos weight para clases desbalanceadas
+# Pos weight para clases desbalanceadas, CAPADO para no inflar todos los logits.
+# Sin cap, neg/pos llega a ~100 en etiquetas raras y el modelo predice "si" a
+# casi todo (probabilidades aplanadas en 60-67%). Cap a 10 = recall razonable
+# sin sobre-prediccion masiva.
 pos_counts = Y_train.sum(axis=0)
 neg_counts = len(Y_train) - pos_counts
-pos_weight = torch.tensor(neg_counts / (pos_counts + 1e-6), dtype=torch.float32).to(DEVICE)
+pos_weight = np.minimum(neg_counts / (pos_counts + 1e-6), POS_WEIGHT_CAP)
+pos_weight = torch.tensor(pos_weight, dtype=torch.float32).to(DEVICE)
 criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
 # ── Entrenamiento ─────────────────────────────────────────────────────────────

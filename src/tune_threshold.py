@@ -13,12 +13,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, precision_score, recall_score
 from collections import Counter
 import matplotlib.pyplot as plt
-from config import DATA_PROCESSED, MODELS_DIR, OUTPUTS_DIR, BIOBERT_MODEL, DEVICE, RANDOM_SEED, TEST_SIZE
+from config import (DATA_PROCESSED, MODELS_DIR, OUTPUTS_DIR, BIOBERT_MODEL, DEVICE,
+                    RANDOM_SEED, TEST_SIZE, EXTENDED_EPOCHS, POS_WEIGHT_CAP)
+from model import BioBERTClassifier
+from patient_text import row_to_text, MAX_LEN
+from labels import build_label_vocab
 
-MAX_LEN     = 128
 BATCH_TRAIN = 32
 BATCH_EVAL  = 64
-EPOCHS      = 10
+EPOCHS      = EXTENDED_EPOCHS
 LR          = 2e-5
 
 class FAERSDataset(Dataset):
@@ -35,43 +38,16 @@ class FAERSDataset(Dataset):
                 "attention_mask": enc["attention_mask"].squeeze(0),
                 "labels": self.labels[idx]}
 
-class BioBERTClassifier(nn.Module):
-    def __init__(self, bert_model, num_labels, dropout=0.3):
-        super().__init__()
-        self.bert = bert_model
-        hidden = self.bert.config.hidden_size
-        self.classifier = nn.Sequential(
-            nn.Dropout(dropout), nn.Linear(hidden, 256),
-            nn.ReLU(), nn.Dropout(dropout), nn.Linear(256, num_labels)
-        )
-    def forward(self, input_ids, attention_mask):
-        out = self.bert(input_ids=input_ids, attention_mask=attention_mask)
-        return self.classifier(out.last_hidden_state[:, 0, :])
-
 # ── Datos ─────────────────────────────────────────────────────────────────────
 df = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 df["age_years"] = pd.to_numeric(df["age_years"], errors="coerce")
-MIN_REACTION_FREQ = 50
-all_reac = [r for row in df["reactions"].dropna() for r in row.split("|")]
-freq_reac = {r for r, n in Counter(all_reac).items() if n >= MIN_REACTION_FREQ}
-df["reaction_list"] = df["reactions"].apply(
-    lambda s: [r for r in s.split("|") if r in freq_reac] if pd.notna(s) else [])
-mask = df["reaction_list"].apply(len) > 0
-df = df[mask].reset_index(drop=True)
-
-label_names = sorted(freq_reac)
+df, label_names = build_label_vocab(df)
 label2idx = {l: i for i, l in enumerate(label_names)}
 num_labels = len(label_names)
 
-# Texto más rico: incluir sexo y edad
-def build_text(row):
-    age = f"age {int(row['age_years'])} years" if pd.notna(row.get("age_years")) else "age unknown"
-    sex = {"M": "male", "F": "female"}.get(str(row.get("sex", "U")).strip(), "unknown sex")
-    drug = str(row.get("drug", "unknown"))[:120]
-    indi = str(row.get("indications", "unknown"))[:250]
-    return f"patient {age} {sex}. drug: {drug}. indication: {indi}"
-
-texts = df.apply(build_text, axis=1).tolist()
+# Texto canonico del paciente — MISMO formato que en entrenamiento e inferencia
+df["weight_kg"] = pd.to_numeric(df.get("weight_kg"), errors="coerce")
+texts = df.apply(row_to_text, axis=1).tolist()
 Y = np.zeros((len(df), num_labels), dtype=np.float32)
 for i, reactions in enumerate(df["reaction_list"]):
     for r in reactions:
@@ -115,7 +91,8 @@ scheduler = get_linear_schedule_with_warmup(
 
 pos_counts = Y_train.sum(axis=0)
 neg_counts = len(Y_train) - pos_counts
-pos_weight = torch.tensor(neg_counts / (pos_counts + 1e-6), dtype=torch.float32).to(DEVICE)
+pos_weight = np.minimum(neg_counts / (pos_counts + 1e-6), POS_WEIGHT_CAP)
+pos_weight = torch.tensor(pos_weight, dtype=torch.float32).to(DEVICE)
 criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
 def get_logits(model, loader):

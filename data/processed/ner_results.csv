@@ -1,0 +1,501 @@
+primaryid,drug,indications_text,entities_found,n_entities
+256522432,DULAGLUTIDE,Diabetes Mellitus|Type 2 Diabetes Mellitus,Diabetes[DISEASE]|Diabetes[DISEASE]|Mellitus[ORG],3
+254464953,VEDOLIZUMAB,Colitis Ulcerative|Crohn'S Disease,Colitis[DISEASE]|Disease[CONDITION],2
+264960951,NIVOLUMAB,Metastatic Malignant Melanoma|Product Used For Unknown Indication,Metastatic Malignant[PERSON],1
+262889501,CARBOPLATIN,Non-Small Cell Lung Cancer|Product Used For Unknown Indication,Non-Small Cell Lung Cancer|Product Used For Unknown Indication[ORG],1
+239258072,ABALOPARATIDE,Senile Osteoporosis,Osteoporosis[DISEASE],1
+262439221,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+252401557,VEDOLIZUMAB,Colitis Ulcerative,Colitis[DISEASE],1
+208804622,ABALOPARATIDE,Osteoporosis,Osteoporosis[DISEASE],1
+262885081,GUSELKUMAB,Product Used For Unknown Indication,,0
+262253812,TIRZEPATIDE,Weight Control,,0
+249122529,DUPILUMAB,Chronic Obstructive Pulmonary Disease,Disease[CONDITION],1
+261547133,USTEKINUMAB,Product Used For Unknown Indication,,0
+263416051,CORTICOTROPIN,Product Used For Unknown Indication,,0
+263721601,DULAGLUTIDE,Product Used For Unknown Indication,,0
+265438061,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+262503641,LEVETIRACETAM,Seizure,,0
+265191661,ESOMEPRAZOLE,Helicobacter Gastritis,Helicobacter Gastritis[PERSON],1
+263892412,DUPILUMAB,Dermatitis Atopic|Eczema,Dermatitis[ORG],1
+263349861,METHOTREXATE,Bone Marrow Conditioning Regimen|Prophylaxis Against Graft Versus Host Disease,Versus Host[PERSON]|Disease[CONDITION],2
+264855721,ABIRATERONE ACETATE,Prostate Cancer,Prostate[ORG]|Cancer[DISEASE],2
+263886411,INSULIN GLARGINE,Blood Glucose Increased,,0
+264927721,TROFINETIDE,Rett Syndrome,Syndrome[CONDITION],1
+263909031,DUPILUMAB,Eczema,Eczema[ORG],1
+264886971,CLOZAPINE,Schizophrenia,Schizophrenia[ORG],1
+264814951,BELIMUMAB,Systemic Lupus Erythematosus,Lupus[DISEASE],1
+262702002,RISANKIZUMAB-RZAA,Psoriasis,Psoriasis[DISEASE],1
+264158901,RUXOLITINIB,Polycythaemia Vera|Product Used For Unknown Indication,,0
+265104261,AVELUMAB,Product Used For Unknown Indication,,0
+264654681,REMIBRUTINIB,Idiopathic Urticaria,Idiopathic Urticaria[PERSON],1
+264720051,MANNITOL,Anaesthesia|Dental Local Anaesthesia|Local Anaesthesia|Product Used For Unknown Indication|Sedation,,0
+264646921,PEMBROLIZUMAB,Oesophageal Cancer Metastatic,Cancer[DISEASE],1
+264891931,TOLVAPTAN,Product Used For Unknown Indication,,0
+262506051,DUPILUMAB,Asthma,Asthma[DISEASE],1
+261836343,UPADACITINIB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+259647012,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+264268361,PIMAVANSERIN TARTRATE,Parkinson'S Disease Psychosis,Parkinson[DISEASE]|Disease[CONDITION],2
+265480071,IBRUTINIB,Central Nervous System Lymphoma,Lymphoma[DISEASE],1
+262412981,INSULIN GLARGINE,Blood Glucose Increased,,0
+239267242,ABALOPARATIDE,Osteoporosis,Osteoporosis[DISEASE],1
+265503241,TEZEPELUMAB,Asthma,Asthma[DISEASE],1
+265066732,ABEMACICLIB,Breast Cancer Female,Cancer[DISEASE],1
+245694697,UPADACITINIB,Cystoscopy|Gastrooesophageal Reflux Disease|Rheumatoid Arthritis,Arthritis[DISEASE],1
+265133711,TENAPANOR HYDROCHLORIDE,Hyperphosphataemia|Product Used For Unknown Indication,Used For Unknown Indication[WORK_OF_ART],1
+145359972,ABALOPARATIDE,Osteoporosis Postmenopausal|Pain,Osteoporosis[DISEASE],1
+265281521,LEVONORGESTREL,Intrauterine Contraception,,0
+264515461,ARIPIPRAZOLE,Mixed Anxiety And Depressive Disorder|Psychotic Disorder,Anxiety[DISEASE]|Disorder[CONDITION],2
+263329892,CALCIUM CHLORIDE\DEXTROSE\MAGNESIUM CHLORIDE\SODIUM CHLORIDE\SODIUM LACTATE,Renal Failure,Failure[CONDITION],1
+263727251,LORLATINIB,Non-Small Cell Lung Cancer,Non-Small Cell Lung[ORG]|Cancer[DISEASE],2
+264697461,TIRZEPATIDE,Product Used For Unknown Indication,,0
+264762142,NATALIZUMAB,Product Used For Unknown Indication,,0
+263338621,VALPROATE SODIUM,Agitation,,0
+264549441,MAGNESIUM SULFATE,Premature Labour,,0
+263430841,CABOZANTINIB S-MALATE,Renal Cancer,Cancer[DISEASE],1
+263479891,IMLUNESTRANT,Product Used For Unknown Indication,,0
+264625041,TRAMETINIB,Metastatic Malignant Melanoma|N-Ras Gene Mutation,Metastatic Malignant[PERSON],1
+261908253,DORZOLAMIDE HYDROCHLORIDE,Glaucoma,Glaucoma[GPE],1
+177365202,ABALOPARATIDE,Osteoporosis Postmenopausal,Osteoporosis[DISEASE],1
+264492831,ISATUXIMAB,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+186099392,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+208799212,ABALOPARATIDE,Osteoporosis,Osteoporosis[DISEASE],1
+262876941,CLOZAPINE,Product Used For Unknown Indication,,0
+262457041,LENALIDOMIDE,Product Used For Unknown Indication,,0
+253466068,LENALIDOMIDE,White Blood Cell Count Decreased,White Blood Cell Count Decreased[ORG],1
+263127451,DONANEMAB-AZBT,Dementia Alzheimer'S Type|Product Used For Unknown Indication,Alzheimer[DISEASE],1
+264512701,BREXPIPRAZOLE,Major Depression,Depression[DISEASE],1
+264066171,TERIPARATIDE,Product Used For Unknown Indication,,0
+265114641,LECANEMAB-IRMB,Cognitive Disorder,Disorder[CONDITION],1
+261878412,NINTEDANIB,Pleuroparenchymal Fibroelastosis,,0
+262671391,IMATINIB MESYLATE,B-Cell Type Acute Leukaemia|Product Used For Unknown Indication,B-Cell Type Acute[ORG],1
+264447721,CLARITHROMYCIN,Psoriasis|Upper Respiratory Tract Infection,Respiratory Tract[ORG]|Infection[CONDITION],2
+264236181,ONABOTULINUMTOXINA,Migraine,Migraine[DISEASE],1
+265051331,MEDROXYPROGESTERONE ACETATE,Contraception,,0
+264898332,TACROLIMUS,Immunosuppressant Drug Therapy,Immunosuppressant Drug[ORG]|Therapy[DRUG_USE],2
+250480972,RISANKIZUMAB-RZAA,Psoriasis,Psoriasis[DISEASE],1
+248425745,DUPILUMAB,Asthma,Asthma[DISEASE],1
+265162941,SEVOFLURANE,General Anaesthesia|Haemostasis|Intraoperative Care|Nephrotic Syndrome|Procedural Pain|Prophylaxis,,0
+259316353,DEXAMETHASONE,Product Used For Unknown Indication,,0
+263403721,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+264445661,LEVONORGESTREL,Contraception|Intrauterine Contraception,,0
+260913572,OMALIZUMAB,Product Used For Unknown Indication,,0
+263261531,TIRZEPATIDE,Product Used For Unknown Indication,,0
+264509112,REMIBRUTINIB,Chronic Spontaneous Urticaria,,0
+260125792,DAPAGLIFLOZIN,Cardiac Failure Chronic|Hypertension,Failure[CONDITION],1
+264032431,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+264073131,OCRELIZUMAB,Product Used For Unknown Indication,,0
+250758442,AXICABTAGENE CILOLEUCEL,Diffuse Large B-Cell Lymphoma,Lymphoma[DISEASE],1
+248336345,DUPILUMAB,Eczema,Eczema[ORG],1
+262466861,ADALIMUMAB,Product Used For Unknown Indication,,0
+264418161,BUROSUMAB-TWZA,Product Used For Unknown Indication,,0
+264642021,CERTOLIZUMAB PEGOL,Illness|Off Label Use|Product Used For Unknown Indication,Illness|Off Label Use|Product[PERSON],1
+262239561,FENFLURAMINE,Lennox-Gastaut Syndrome,Lennox-Gastaut[ORG]|Syndrome[CONDITION],2
+263131641,TIRZEPATIDE,Product Used For Unknown Indication,,0
+265369531,AMLODIPINE BESYLATE,Fatigue|Product Used For Unknown Indication,,0
+265090601,MAVACAMTEN,Hypertrophic Cardiomyopathy,Hypertrophic Cardiomyopathy[PERSON],1
+263722171,PALTUSOTINE HYDROCHLORIDE,Acromegaly|Hypertension|Hypothyroidism,,0
+2168689418,VEDOLIZUMAB,Crohn'S Disease|Product Used For Unknown Indication,Crohn[DISEASE],1
+262542271,COPPER,Contraception,,0
+262727771,CORTICOTROPIN,Keratitis Interstitial,Keratitis Interstitial[PERSON],1
+263624031,LOSARTAN,Product Used For Unknown Indication,,0
+264202251,FINASTERIDE,Product Used For Unknown Indication,,0
+265198261,INFLIXIMAB-QBTX,Crohn'S Disease,Crohn[DISEASE]|Disease[CONDITION],2
+263470201,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+259273853,OFATUMUMAB,Dementia Alzheimer'S Type|Multiple Sclerosis|Product Used For Unknown Indication,Alzheimer[DISEASE],1
+262808683,VILOXAZINE HYDROCHLORIDE,Attention Deficit Hyperactivity Disorder|Product Used For Unknown Indication,,0
+263779122,BUDESONIDE,Iga Nephropathy|Product Used For Unknown Indication,,0
+264465611,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+264277741,ADALIMUMAB,Ankylosing Spondylitis|Product Used For Unknown Indication,,0
+2205210815,GOLIMUMAB,Product Used For Unknown Indication|Rheumatoid Arthritis,Arthritis[DISEASE],1
+263292811,LOTILANER,Product Used For Unknown Indication,,0
+263412181,AZITHROMYCIN DIHYDRATE,Chlamydial Infection,Infection[CONDITION],1
+262260101,RISANKIZUMAB-RZAA,Psoriasis,Psoriasis[DISEASE],1
+261782222,HYDROCORTISONE\NEOMYCIN SULFATE\POLYMYXIN B SULFATE,Product Used For Unknown Indication,,0
+262573171,TOPIRAMATE,Headache|Product Used For Unknown Indication,,0
+263717081,BENRALIZUMAB,Asthma,Asthma[DISEASE],1
+265523891,UPADACITINIB,Crohn'S Disease,Crohn[DISEASE]|Disease[CONDITION],2
+264791942,PREDNISOLONE,Eosinophilia|Hypereosinophilic Syndrome,Syndrome[CONDITION],1
+263446172,TIRZEPATIDE,Atrial Fibrillation|Obstructive Sleep Apnoea Syndrome,Atrial[DISEASE]|Syndrome[CONDITION],2
+262945911,DUPILUMAB,Psoriasis,Psoriasis[DISEASE],1
+263262691,EZETIMIBE,Hypercholesterolaemia|Myocardial Infarction|Product Used For Unknown Indication|Stent Placement,Used For Unknown Indication|Stent Placement[WORK_OF_ART],1
+264333121,PERFLUTREN,Echocardiogram|Product Used For Unknown Indication,,0
+263084421,ENTECAVIR,Hepatitis B|Hiatus Hernia|Multiple Sclerosis|Neurogenic Bladder,Hepatitis[DISEASE],1
+261876532,UPADACITINIB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+257112782,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+264834201,TIRZEPATIDE,Product Used For Unknown Indication,,0
+265698951,FOSAPREPITANT DIMEGLUMINE,Nausea,Nausea[CONDITION],1
+265325331,TILDRAKIZUMAB,Product Used For Unknown Indication|Psoriasis,,0
+265487171,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+265613441,CALCIUM CHLORIDE\DEXTROSE\MAGNESIUM CHLORIDE\SODIUM CHLORIDE\SODIUM LACTATE,End Stage Renal Disease,Disease[CONDITION],1
+145954562,RISPERIDONE,Product Used For Unknown Indication,,0
+263286931,ZAVEGEPANT HYDROCHLORIDE,Migraine,Migraine[DISEASE],1
+263609581,UPADACITINIB,Product Used For Unknown Indication,,0
+263346041,TIRZEPATIDE,Product Used For Unknown Indication,,0
+262710622,TIRZEPATIDE,Weight Control,,0
+265594721,POMALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+262947321,TIRZEPATIDE,Product Used For Unknown Indication,,0
+261674233,DUPILUMAB,Asthma|Nasal Polyps,Asthma|Nasal Polyps[PERSON],1
+262178242,SPARSENTAN,Iga Nephropathy,Iga Nephropathy[PERSON],1
+262903161,DAPAGLIFLOZIN,Product Used For Unknown Indication,,0
+265574631,DUPILUMAB,Dermatitis Atopic|Eczema,Dermatitis[ORG],1
+264542621,NEMOLIZUMAB-ILTO,Pruritus,Pruritus[ORG],1
+262398031,CARBOXYMETHYLCELLULOSE SODIUM\GLYCERIN,Cataract,,0
+264443081,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+261624412,VENLAFAXINE HYDROCHLORIDE,Hypertension|Product Used For Unknown Indication,,0
+264559271,HUMAN IMMUNOGLOBULIN G,Foetal Disorder,Disorder[CONDITION],1
+264509911,PALBOCICLIB,Breast Cancer,Cancer[DISEASE],1
+223272202,ABALOPARATIDE,Osteoporosis|Product Used For Unknown Indication,Used For Unknown Indication[WORK_OF_ART],1
+264394831,RUXOLITINIB,Essential Thrombocythaemia|Product Used For Unknown Indication,,0
+265241751,NINTEDANIB,Pulmonary Fibrosis,,0
+263529911,DIROXIMEL FUMARATE,Multiple Sclerosis|Product Used For Unknown Indication,,0
+192862992,ABALOPARATIDE,Product Used For Unknown Indication,,0
+262232371,BEVACIZUMAB,Ovarian Cancer,Cancer[DISEASE],1
+261790932,ESOMEPRAZOLE,Abdominal Pain Upper|Hypertrophic Cardiomyopathy,Pain[CONDITION],1
+262597791,ROMOSOZUMAB,Product Used For Unknown Indication,,0
+260736322,SODIUM ZIRCONIUM CYCLOSILICATE,Hyperkalaemia,,0
+263348901,PALBOCICLIB,Breast Cancer Metastatic,Cancer[DISEASE],1
+262223932,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+262831812,TOCILIZUMAB,Giant Cell Arteritis,Giant Cell Arteritis[PERSON],1
+239265232,ABALOPARATIDE,Senile Osteoporosis,Osteoporosis[DISEASE],1
+264018111,METHOTREXATE,Product Used For Unknown Indication|Rheumatoid Arthritis,Arthritis[DISEASE],1
+265198871,TIOPRONIN,Cystinuria,Cystinuria[ORG],1
+264145791,SARILUMAB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+262393871,PREGABALIN,Product Used For Unknown Indication,,0
+263709052,DUPILUMAB,Asthma,Asthma[DISEASE],1
+263374581,LEUPROLIDE ACETATE,Prostate Cancer,Prostate[ORG]|Cancer[DISEASE],2
+262346591,METFORMIN HYDROCHLORIDE,Ill-Defined Disorder,Disorder[CONDITION],1
+263187311,LIDOCAINE,Post Herpetic Neuralgia,Post Herpetic Neuralgia[ORG],1
+263597361,AUTOLOGOUS CULTURED CHONDROCYTES\SUS SCROFA COLLAGEN,Cartilage Injury,,0
+262524291,BEVACIZUMAB,Breast Cancer,Cancer[DISEASE],1
+263212121,POMALIDOMIDE,Product Used For Unknown Indication,,0
+263344481,NEMOLIZUMAB-ILTO,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+264354031,SEMAGLUTIDE,Type 2 Diabetes Mellitus,Diabetes[DISEASE]|Mellitus[ORG],2
+263491071,CABOZANTINIB S-MALATE,Renal Cell Carcinoma,,0
+264761251,BEVACIZUMAB,Choroidal Neovascularisation,Choroidal Neovascularisation[ORG],1
+263927791,TRIAMCINOLONE,Hypertension|Pemphigoid,,0
+263405561,MACITENTAN\TADALAFIL,Pulmonary Arterial Hypertension,Pulmonary Arterial[ORG]|Hypertension[DISEASE],2
+263617311,TIRZEPATIDE,Product Used For Unknown Indication,,0
+263455961,ACETAMINOPHEN\CODEINE PHOSPHATE,Analgesic Therapy|Pericoronitis,,0
+262515751,OMALIZUMAB,Idiopathic Urticaria,Idiopathic Urticaria[PERSON],1
+263143791,FLUTICASONE PROPIONATE\SALMETEROL XINAFOATE,Product Used For Unknown Indication,,0
+262771141,ALENDRONATE SODIUM,Product Used For Unknown Indication,,0
+2234923514,AMLODIPINE BESYLATE,Asthma|Cough|Product Used For Unknown Indication,,0
+245747754,TEDUGLUTIDE,Seizure|Short-Bowel Syndrome,Seizure|Short-Bowel[ORG]|Syndrome[CONDITION],2
+261393773,VELAGLUCERASE ALFA,Gaucher'S Disease,Gaucher'S[PERSON]|Disease[CONDITION],2
+262459621,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+263664963,FLUTICASONE FUROATE\UMECLIDINIUM BROMIDE\VILANTEROL TRIFENATATE,Asthma,Asthma[DISEASE],1
+263261252,UPADACITINIB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+265079471,TALQUETAMAB-TGVS,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+265259881,SEMAGLUTIDE,Product Used For Unknown Indication,,0
+208790793,ABALOPARATIDE,Hypersensitivity|Osteoporosis|Product Used For Unknown Indication|Supplementation Therapy,Therapy[DRUG_USE],1
+263532451,PEMBROLIZUMAB,Non-Small Cell Lung Cancer Metastatic,Non-Small Cell Lung[ORG]|Cancer[DISEASE],2
+262986131,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+263775431,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+262395921,ACECLIDINE HYDROCHLORIDE,Presbyopia,,0
+263432791,CABOZANTINIB S-MALATE,Renal Cell Carcinoma,,0
+262639221,TRAMADOL,Product Used For Unknown Indication,,0
+169980084,ABALOPARATIDE,Osteoporosis Postmenopausal,Osteoporosis[DISEASE],1
+264288391,TIRZEPATIDE,Product Used For Unknown Indication,,0
+263702301,MYCOPHENOLATE MOFETIL,Immunosuppressant Drug Therapy,Immunosuppressant Drug[ORG]|Therapy[DRUG_USE],2
+263373751,DENOSUMAB,Product Used For Unknown Indication,,0
+264823081,MOMETASONE FUROATE MONOHYDRATE\OLOPATADINE HYDROCHLORIDE,Product Used For Unknown Indication|Rhinitis Allergic,,0
+264519811,LENALIDOMIDE,Product Used For Unknown Indication,,0
+263041242,BENRALIZUMAB,Eosinophilic Granulomatosis With Polyangiitis,,0
+264392801,DUPILUMAB,Eczema,Eczema[ORG],1
+235585402,OFATUMUMAB,Multiple Sclerosis,Sclerosis[DISEASE],1
+265576891,VEDOLIZUMAB,Crohn'S Disease,Crohn[DISEASE]|Disease[CONDITION],2
+264415651,METHOTREXATE,Haemophagocytic Lymphohistiocytosis,,0
+2043346331,RITUXIMAB,Arthritis|Blood Pressure Abnormal|Blood Pressure Measurement|Diabetes Mellitus|Hypertension|Microalbuminuria|Off Label Use|Premedication|Product Used For Unknown Indication|Psoriasis|Psoriatic Arthropathy|Rheumatoid Arthritis|Sjogren'S Syndrome|Vomiting,,0
+256476825,BISOPROLOL FUMARATE,Cardiogenic Shock|Distributive Shock|Hypertension|Product Used For Unknown Indication,,0
+265186091,APIXABAN,Atrial Fibrillation|Ill-Defined Disorder|Prophylaxis,Atrial[DISEASE],1
+264784902,ROCURONIUM BROMIDE,Sedative Therapy,Therapy[DRUG_USE],1
+265111031,ADALIMUMAB,Product Used For Unknown Indication,,0
+262983551,PALIPERIDONE,Schizophrenia,Schizophrenia[ORG],1
+206777763,OFATUMUMAB,Clinically Isolated Syndrome|Relapsing-Remitting Multiple Sclerosis|Secondary Progressive Multiple Sclerosis,Sclerosis[DISEASE],1
+263243892,PANCRELIPASE AMYLASE\PANCRELIPASE LIPASE\PANCRELIPASE PROTEASE,Constipation|Pancreatic Failure,Failure[CONDITION],1
+264009002,NALTREXONE,Alcoholism|Mood Swings|Product Used For Unknown Indication,Used For Unknown Indication[ORG],1
+265525061,ARIPIPRAZOLE,Agitation,,0
+265100781,VEDOLIZUMAB,Colitis Ulcerative,Colitis[DISEASE],1
+262665981,OMAVELOXOLONE,Friedreich'S Ataxia,Friedreich'S Ataxia[PERSON],1
+262216611,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+265349521,TIRZEPATIDE,Product Used For Unknown Indication,,0
+263396031,INFLIXIMAB,Sarcoidosis,,0
+264061281,TIRZEPATIDE,Product Used For Unknown Indication,,0
+262457901,OCTREOTIDE,Product Used For Unknown Indication,,0
+265313131,ETOMIDATE,General Anaesthesia,Anaesthesia[GPE],1
+264257531,BIMEKIZUMAB,Ankylosing Spondylitis|Product Used For Unknown Indication|Psoriatic Arthropathy,,0
+265288541,TOCILIZUMAB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+262209371,ACYCLOVIR,Product Used For Unknown Indication,,0
+261328092,FRUQUINTINIB,Colon Cancer,Cancer[DISEASE],1
+265471721,LINACLOTIDE,Irritable Bowel Syndrome|Product Used For Unknown Indication,,0
+261473642,LETERMOVIR,Antiviral Prophylaxis,Prophylaxis[DRUG_USE],1
+264945541,DROSPIRENONE\ETHINYL ESTRADIOL,Contraception|Premenstrual Dysphoric Disorder,Disorder[CONDITION],1
+264316062,PANCRELIPASE AMYLASE\PANCRELIPASE LIPASE\PANCRELIPASE PROTEASE,Pancreatic Failure,Failure[CONDITION],1
+262395171,CLOZAPINE,Product Used For Unknown Indication,,0
+263273851,MIFEPRISTONE,Product Used For Unknown Indication,,0
+263987791,INCLISIRAN SODIUM,Product Used For Unknown Indication,,0
+265149081,MITOMYCIN,Transitional Cell Cancer Of The Renal Pelvis And Ureter,Transitional Cell[ORG]|Cancer[DISEASE],2
+262788061,CENOBAMATE,Epilepsy,Epilepsy[DISEASE],1
+265419301,TIRZEPATIDE,Product Used For Unknown Indication,,0
+262403631,TIRZEPATIDE,Weight Control,,0
+264234131,BELUMOSUDIL,Acute Myeloid Leukaemia,,0
+262990432,QUETIAPINE FUMARATE,Product Used For Unknown Indication,,0
+265171321,TACROLIMUS,Cytomegalovirus Nephritis|Immunosuppressant Drug Therapy,Cytomegalovirus Nephritis|Immunosuppressant Drug[ORG]|Therapy[DRUG_USE],2
+265401351,POMALIDOMIDE,Plasma Cell Myeloma|Plasma Cell Myeloma Refractory,Plasma Cell[PERSON]|Myeloma Refractory[ORG],2
+261173172,CALCIUM OXYBATE\MAGNESIUM OXYBATE\POTASSIUM OXYBATE\SODIUM OXYBATE,Bronchitis|Cataplexy|Narcolepsy|Product Used For Unknown Indication|Somnolence,,0
+265600771,DUPILUMAB,Neurodermatitis|Product Used For Unknown Indication,,0
+262752581,INSULIN GLARGINE,Blood Glucose Increased,,0
+264928201,SACITUZUMAB GOVITECAN-HZIY,Product Used For Unknown Indication,,0
+262768381,PIMAVANSERIN TARTRATE,Parkinson'S Disease,Parkinson[DISEASE]|Disease[CONDITION],2
+263427441,CABOZANTINIB S-MALATE,Product Used For Unknown Indication,,0
+263485621,VOCLOSPORIN,Lupus Nephritis,Lupus[DISEASE],1
+265544521,TIRZEPATIDE,Weight Decreased,,0
+264715611,MARIBAVIR,Product Used For Unknown Indication,,0
+261838432,UPADACITINIB,Anaemia|Crohn'S Disease|Gastroenteritis|Herpes Zoster|Hypercholesterolaemia|Oesophagogastroscopy|Osteoporosis,,0
+262222471,ATORVASTATIN CALCIUM,Coronary Artery Disease,Coronary Artery[ORG]|Disease[CONDITION],2
+265528741,MEDROXYPROGESTERONE ACETATE,Contraception,,0
+241773033,SECUKINUMAB,Psoriasis,Psoriasis[DISEASE],1
+263348991,LINEZOLID,Febrile Infection|Pneumonia|Psittacosis,,0
+263828851,FLUTICASONE PROPIONATE,Product Used For Unknown Indication,,0
+204970314,OFATUMUMAB,Relapsing-Remitting Multiple Sclerosis,Sclerosis[DISEASE],1
+263204581,RISANKIZUMAB,Psoriasis,Psoriasis[DISEASE],1
+264599921,CELECOXIB,Pain In Extremity|Product Used For Unknown Indication|Rheumatoid Arthritis,Pain[CONDITION]|Arthritis[DISEASE],2
+261853342,LETROZOLE,Infertility,,0
+262845531,MYCOPHENOLATE MOFETIL,Product Used For Unknown Indication,,0
+265120541,PANCRELIPASE AMYLASE\PANCRELIPASE LIPASE\PANCRELIPASE PROTEASE,Pancreatic Failure,Failure[CONDITION],1
+262795801,ACETAMINOPHEN,Product Used For Unknown Indication,,0
+264748171,RISPERIDONE,Product Used For Unknown Indication,,0
+264845201,TIRZEPATIDE,Weight Control,,0
+262321411,VEDOLIZUMAB,Colitis Ulcerative,Colitis[DISEASE],1
+264073861,ADALIMUMAB-RYVK,Psoriasis,Psoriasis[DISEASE],1
+264184401,FINASTERIDE,Alopecia,,0
+264938551,PYRIDOSTIGMINE BROMIDE,Myasthenia Gravis,Myasthenia Gravis[PERSON],1
+264323781,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+264516741,NEMOLIZUMAB-ILTO,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+263320731,TIRZEPATIDE,Product Used For Unknown Indication,,0
+265293191,RESMETIROM,Gastrooesophageal Reflux Disease|Metabolic Dysfunction-Associated Steatohepatitis|Product Used For Unknown Indication,,0
+253866052,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+262258131,DUPILUMAB,Eczema,Eczema[ORG],1
+253156453,RISANKIZUMAB-RZAA,Colitis Ulcerative,Colitis[DISEASE],1
+263232851,UPADACITINIB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+215918513,ETHIODIZED OIL,Therapeutic Embolisation,,0
+263966981,AFATINIB,Glioblastoma|Product Used For Unknown Indication,,0
+264296641,BRENSOCATIB,Bronchiectasis,,0
+262266441,RITUXIMAB,Dermatomyositis,,0
+262071032,SILDENAFIL,Erectile Dysfunction|Hypertension|Product Used For Unknown Indication,,0
+262882841,TIRZEPATIDE,Product Used For Unknown Indication,,0
+248513282,CENOBAMATE,Seizure,,0
+254964532,INFLIXIMAB,Hidradenitis,Hidradenitis[ORG],1
+261769422,NATALIZUMAB,Multiple Sclerosis,Sclerosis[DISEASE],1
+262799891,DUPILUMAB,Chronic Obstructive Pulmonary Disease,Disease[CONDITION],1
+264376471,OMAVELOXOLONE,Product Used For Unknown Indication,,0
+262579521,OFATUMUMAB,Multiple Sclerosis,Sclerosis[DISEASE],1
+256485913,BIMEKIZUMAB-BKZX,Psoriasis|Psoriatic Arthropathy,Arthropathy[PERSON],1
+177364762,ABALOPARATIDE,Osteoporosis Postmenopausal|Product Used For Unknown Indication,Osteoporosis[DISEASE],1
+228243575,SOMATROPIN,Diabetes Mellitus|Hypopituitarism|Hypothalamo-Pituitary Disorder|Pituitary-Dependent Cushing'S Syndrome|Surgery,Diabetes[DISEASE],1
+263868362,EVOLOCUMAB,Blood Cholesterol Abnormal,Cholesterol Abnormal[PERSON],1
+262442182,LEUPROLIDE ACETATE,Prostate Cancer,Prostate[ORG]|Cancer[DISEASE],2
+265155121,MIRVETUXIMAB SORAVTANSINE-GYNX,Neoplasm Malignant,Neoplasm Malignant[ORG],1
+263733221,PEMBROLIZUMAB,Malignant Melanoma,Melanoma[DISEASE],1
+258464772,CLOZAPINE,Schizophrenia,Schizophrenia[ORG],1
+262703201,IBRUTINIB,Chronic Lymphocytic Leukaemia|Product Used For Unknown Indication,,0
+262216692,CARBOPLATIN,Polymyositis|Product Used For Unknown Indication|Skin Squamous Cell Carcinoma Recurrent|Squamous Cell Carcinoma Of Skin,,0
+262997461,FINASTERIDE,Benign Prostatic Hyperplasia|Hypercholesterolaemia|Hypertension,,0
+253875692,IBRUTINIB,Mantle Cell Lymphoma,Mantle Cell[ORG]|Lymphoma[DISEASE],2
+265036291,LEVETIRACETAM,Hemiconvulsion-Hemiplegia-Epilepsy Syndrome|Off Label Use|Seizure,Hemiconvulsion-Hemiplegia-[ORG]|Epilepsy[DISEASE],2
+262599151,COPPER,Contraception,,0
+264265841,METOPROLOL SUCCINATE,Arrhythmia,,0
+262446653,SILDENAFIL,Erectile Dysfunction|Hypertension|Product Used For Unknown Indication,,0
+264794491,UPADACITINIB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+264806151,BEVACIZUMAB,Product Used For Unknown Indication,,0
+264716581,PERTUZUMAB,Breast Cancer,Cancer[DISEASE],1
+264815691,PEGFILGRASTIM,Product Used For Unknown Indication,,0
+264580281,ABATACEPT,Rheumatoid Arthritis,Arthritis[DISEASE],1
+264730941,BIMEKIZUMAB-BKZX,Product Used For Unknown Indication|Psoriatic Arthropathy,,0
+263485191,VOCLOSPORIN,Lupus Nephritis,Lupus[DISEASE],1
+262178183,ALBUTEROL SULFATE,Asthma,Asthma[DISEASE],1
+264448841,ETRASIMOD ARGININE,Colitis Ulcerative,Colitis[DISEASE],1
+263163961,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+246583203,NIRAPARIB,Ovarian Cancer,Cancer[DISEASE],1
+262312401,ROSUVASTATIN CALCIUM,Ill-Defined Disorder|Irrigation Therapy|Lipids Abnormal|Product Used For Unknown Indication,Ill-Defined[ORG]|Used For Unknown Indication[ORG],2
+263426331,CABOZANTINIB S-MALATE,Hepatocellular Carcinoma,Hepatocellular Carcinoma[PERSON],1
+265331112,DUPILUMAB,Dermatitis,Dermatitis[ORG],1
+264669742,DEXAMETHASONE,Haemophagocytic Lymphohistiocytosis,,0
+263085891,INSULIN GLARGINE,Diabetes Mellitus,Diabetes[DISEASE]|Mellitus[ORG],2
+264321482,TROFINETIDE,Rett Syndrome,Syndrome[CONDITION],1
+263537111,BORTEZOMIB,Renal Amyloidosis,Renal Amyloidosis[ORG],1
+264074931,GEMCITABINE,Product Used For Unknown Indication,,0
+262204591,SARILUMAB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+264653611,RISANKIZUMAB-RZAA,Colitis Ulcerative|Product Used For Unknown Indication,Colitis[DISEASE],1
+251880796,ATEZOLIZUMAB,Hepatocellular Carcinoma,Hepatocellular Carcinoma[PERSON],1
+263264261,SERTRALINE HYDROCHLORIDE,Product Used For Unknown Indication,,0
+263639041,GABAPENTIN,Arthritis|Fibromyalgia,,0
+262629972,METFORMIN HYDROCHLORIDE,Diabetes Mellitus|Hyperlipidaemia|Schizoaffective Disorder,Diabetes[DISEASE]|Disorder[CONDITION],2
+263709931,TIOTROPIUM BROMIDE,Asthma,Asthma[DISEASE],1
+258974983,SEMAGLUTIDE,Product Used For Unknown Indication,,0
+261623882,REPOTRECTINIB,Non-Small Cell Lung Cancer,Non-Small Cell Lung[ORG]|Cancer[DISEASE],2
+264012921,BRIVARACETAM,Epilepsy|Seizure Cluster,,0
+264531632,TREPROSTINIL,Product Used For Unknown Indication,,0
+265440561,CIPROFLOXACIN,Testicular Pain,Pain[CONDITION],1
+264302781,PERFLUTREN,Echocardiogram,,0
+263140792,ACETAMINOPHEN,Anticoagulant Therapy|Back Pain,Pain[CONDITION],1
+264047421,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+264470031,INSULIN GLARGINE,Diabetes Mellitus,Diabetes[DISEASE]|Mellitus[ORG],2
+262284211,ACETAMINOPHEN,Tooth Infection|Toothache,,0
+263455831,RISANKIZUMAB-RZAA,Crohn'S Disease,Crohn[DISEASE]|Disease[CONDITION],2
+263739832,TOLVAPTAN,Congenital Cystic Kidney Disease,Congenital Cystic Kidney[ORG]|Disease[CONDITION],2
+265255741,CORTICOTROPIN,Glomerulonephritis|Nephrotic Syndrome,Syndrome[CONDITION],1
+263979021,RISANKIZUMAB-RZAA,Crohn'S Disease,Crohn[DISEASE]|Disease[CONDITION],2
+265361001,CISPLATIN,Oesophageal Squamous Cell Carcinoma,,0
+265615471,PANCRELIPASE AMYLASE\PANCRELIPASE LIPASE\PANCRELIPASE PROTEASE,Product Used For Unknown Indication,,0
+263635341,INSULIN GLARGINE,Blood Glucose Increased,,0
+263991042,ENCORAFENIB,Metastatic Malignant Melanoma,Metastatic[NORP]|Melanoma[DISEASE],2
+265357981,TIRZEPATIDE,Product Used For Unknown Indication,,0
+262346552,CILTACABTAGENE AUTOLEUCEL,Product Used For Unknown Indication,,0
+265652681,EPOETIN ALFA-EPBX,Anaemia,,0
+265367011,BEMPEDOIC ACID,Prophylaxis,Prophylaxis[DRUG_USE],1
+262263441,DUPILUMAB,Eczema,Eczema[ORG],1
+262092272,CLOZAPINE,Product Used For Unknown Indication,,0
+262636471,HUMAN IMMUNOGLOBULIN G,Dermatomyositis,,0
+262768392,FLUTICASONE PROPIONATE\SALMETEROL XINAFOATE,Product Used For Unknown Indication,,0
+263271751,UBROGEPANT,Migraine,Migraine[DISEASE],1
+262967221,RISANKIZUMAB-RZAA,Colitis Ulcerative,Colitis[DISEASE],1
+262498262,FLUCONAZOLE,Candida Infection|Evidence Based Treatment|Necrotising Fasciitis|Product Used For Unknown Indication,Candida[GPE],1
+262595491,COPPER,Contraception,,0
+263643221,DUPILUMAB,Asthma,Asthma[DISEASE],1
+239275172,ABALOPARATIDE,Senile Osteoporosis,Osteoporosis[DISEASE],1
+192901522,ABALOPARATIDE,Product Used For Unknown Indication|Senile Osteoporosis,Osteoporosis[DISEASE],1
+262523241,PATISIRAN SODIUM,Product Used For Unknown Indication,,0
+265304541,LEVONORGESTREL,Post Coital Contraception,Post Coital Contraception[ORG],1
+230376783,LETROZOLE,Breast Cancer Metastatic,Cancer[DISEASE],1
+265007261,TIRZEPATIDE,Weight Control,,0
+192869432,ABALOPARATIDE,Product Used For Unknown Indication|Rheumatoid Arthritis,Arthritis[DISEASE],1
+261277552,DUPILUMAB,Pemphigoid,Pemphigoid[ORG],1
+264039251,RUXOLITINIB,Essential Thrombocythaemia|Product Used For Unknown Indication,,0
+264485651,PIMAVANSERIN TARTRATE,Parkinson'S Disease Psychosis,Parkinson[DISEASE]|Disease[CONDITION],2
+262812081,AMIVANTAMAB-VMJW,Non-Small Cell Lung Cancer,Non-Small Cell Lung[ORG]|Cancer[DISEASE],2
+264502721,MYCOPHENOLIC ACID,Immunosuppressant Drug Therapy,Immunosuppressant Drug[ORG]|Therapy[DRUG_USE],2
+142560886,ADALIMUMAB,Antifungal Treatment|Colitis Ulcerative|Hypersensitivity|Insomnia|Procedural Pain|Seasonal Allergy,,0
+249301643,CENOBAMATE,Epilepsy|Product Used For Unknown Indication|Seizure,,0
+264359152,DONANEMAB-AZBT,Dementia Alzheimer'S Type,Alzheimer[DISEASE],1
+262759201,INSULIN GLARGINE,Blood Glucose Increased,,0
+264035642,ONABOTULINUMTOXINA,Product Used For Unknown Indication|Skin Wrinkling,,0
+265062361,BIMEKIZUMAB-BKZX,Psoriasis,Psoriasis[DISEASE],1
+264228321,DEUTETRABENAZINE,Product Used For Unknown Indication,,0
+264805612,RELUGOLIX,Product Used For Unknown Indication|Prostate Cancer,Cancer[DISEASE],1
+258207803,DUPILUMAB,Dermatitis Atopic|Eczema,Dermatitis[ORG],1
+262715511,METHADONE HYDROCHLORIDE,Product Used For Unknown Indication,,0
+263137911,BROLUCIZUMAB,Polypoidal Choroidal Vasculopathy,Choroidal Vasculopathy[PERSON],1
+263528691,NEMOLIZUMAB-ILTO,Neurodermatitis,Neurodermatitis[GPE],1
+264219951,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+262404231,DIAZEPAM,Bipolar Disorder|Catatonia|Depression,,0
+263591311,BUDESONIDE\FORMOTEROL\GLYCOPYRROLATE,Chronic Obstructive Pulmonary Disease,Disease[CONDITION],1
+262942911,DUPILUMAB,Asthma,Asthma[DISEASE],1
+263897481,RIVAROXABAN,Renal Infarct|Splenic Infarction,Renal Infarct|Splenic Infarction[ORG],1
+256409865,DUPILUMAB,Nasal Polyps,Nasal Polyps[ORG],1
+263830341,CALCIUM OXYBATE\MAGNESIUM OXYBATE\POTASSIUM OXYBATE\SODIUM OXYBATE,Narcolepsy|Product Used For Unknown Indication|Somnolence,,0
+260473364,ABROCITINIB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+262318332,BRENSOCATIB,Bronchiectasis|Product Used For Unknown Indication,,0
+263372801,CLOZAPINE,Product Used For Unknown Indication,,0
+187091213,OXYCODONE HYDROCHLORIDE,Neoplasm Malignant|Product Used For Unknown Indication,,0
+264172171,MACITENTAN,Pulmonary Arterial Hypertension,Pulmonary Arterial[ORG]|Hypertension[DISEASE],2
+265558011,PRABOTULINUMTOXINA-XVFS,Product Used For Unknown Indication,,0
+263064021,EPTINEZUMAB-JJMR,Product Used For Unknown Indication,,0
+264805341,MYCOPHENOLATE MOFETIL,Product Used For Unknown Indication,,0
+264371591,RISANKIZUMAB-RZAA,Crohn'S Disease,Crohn[DISEASE]|Disease[CONDITION],2
+262555611,COPPER,Contraception,,0
+258946414,ABALOPARATIDE,Osteoporosis|Product Used For Unknown Indication,Used For Unknown Indication[WORK_OF_ART],1
+262678741,INSULIN GLARGINE,Blood Glucose Increased,,0
+263837871,SEBETRALSTAT,Hereditary Angioedema,Hereditary Angioedema[PERSON],1
+263907441,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+265125061,ATEZOLIZUMAB,Hepatocellular Carcinoma,Hepatocellular Carcinoma[PERSON],1
+263793321,CYCLOSPORINE,Immunosuppressant Drug Therapy|Renal Transplant,Immunosuppressant Drug[ORG],1
+208789352,ABALOPARATIDE,Product Used For Unknown Indication|Senile Osteoporosis,Osteoporosis[DISEASE],1
+264272811,RISANKIZUMAB-RZAA,Colitis Ulcerative,Colitis[DISEASE],1
+264640911,LEVONORGESTREL,Intrauterine Contraception,,0
+265090441,OSIMERTINIB,Lung Neoplasm Malignant,Lung Neoplasm Malignant[PERSON],1
+264317761,RISANKIZUMAB-RZAA,Crohn'S Disease,Crohn[DISEASE]|Disease[CONDITION],2
+264955591,TACROLIMUS,Liver Transplant,Liver Transplant[PERSON],1
+262201082,RELUGOLIX,Prostate Cancer,Prostate[ORG]|Cancer[DISEASE],2
+264164762,DUPILUMAB,Asthma|Dermatitis Atopic,,0
+265009141,TIRZEPATIDE,Sleep Apnoea Syndrome|Weight Control,,0
+179955592,RISPERIDONE,Product Used For Unknown Indication,,0
+263774132,BUDESONIDE,Iga Nephropathy|Product Used For Unknown Indication|Renal Disorder,Disorder[CONDITION],1
+264451861,PREDNISONE,Drug Reaction With Eosinophilia And Systemic Symptoms|Product Used For Unknown Indication,,0
+255786029,HUMAN IMMUNOGLOBULIN G\HYALURONIDASE (HUMAN RECOMBINANT),Immunodeficiency Common Variable|Primary Immunodeficiency Syndrome|Product Used For Unknown Indication,,0
+264002461,DUPILUMAB,Asthma,Asthma[DISEASE],1
+264988571,TIRZEPATIDE,Product Used For Unknown Indication,,0
+247943543,CLOZAPINE,Product Used For Unknown Indication,,0
+264096541,SEMAGLUTIDE,Blood Glucose Increased,,0
+263440021,TACROLIMUS,Immunosuppressant Drug Therapy,Immunosuppressant Drug[ORG]|Therapy[DRUG_USE],2
+235346302,RISANKIZUMAB-RZAA,Psoriasis,Psoriasis[DISEASE],1
+262595321,COPPER,Contraception,,0
+263084212,ACETAMINOPHEN,Blood Pressure Measurement|Headache|Palpitations|Product Used For Unknown Indication|Pulmonary Arterial Hypertension,Hypertension[DISEASE],1
+263192991,DUPILUMAB,Nasal Polyps,Nasal Polyps[ORG],1
+264495781,ETHIODIZED OIL,Transcatheter Arterial Chemoembolisation,Transcatheter Arterial Chemoembolisation[ORG],1
+262353961,TIRZEPATIDE,Weight Control,,0
+265503491,TIRZEPATIDE,Weight Control,,0
+256036772,LEVONORGESTREL,Product Used For Unknown Indication,,0
+262920641,FUROSEMIDE,Product Used For Unknown Indication,,0
+262333891,FLUOROURACIL,Neoplasm Malignant|Pancreatic Carcinoma,,0
+263966821,ACETAMINOPHEN,Product Used For Unknown Indication,,0
+263611101,NEMOLIZUMAB-ILTO,Neurodermatitis,Neurodermatitis[GPE],1
+265382081,DUPILUMAB,Nasal Polyps,Nasal Polyps[ORG],1
+255221326,"ANTIHEMOPHILIC FACTOR, HUMAN RECOMBINANT",Factor Viii Deficiency|Haematuria|Prophylaxis,,0
+262813812,BRIVARACETAM,Seizure,,0
+262870781,EVOLOCUMAB,Product Used For Unknown Indication,,0
+253441892,DUPILUMAB,Neurodermatitis,Neurodermatitis[GPE],1
+261098232,DROSPIRENONE,Contraception,,0
+262923211,ACETAMINOPHEN,Suicide Attempt,,0
+264498631,RITUXIMAB,Rheumatoid Arthritis|Sjogren'S Syndrome,Syndrome[CONDITION],1
+265314781,APIXABAN,Atrial Fibrillation|Ill-Defined Disorder,Atrial[DISEASE]|Disorder[CONDITION],2
+218942722,CLOZAPINE,Product Used For Unknown Indication,,0
+223279462,ABALOPARATIDE,Product Used For Unknown Indication,,0
+264661961,PIMAVANSERIN TARTRATE,Parkinson'S Disease,Parkinson[DISEASE]|Disease[CONDITION],2
+265070651,METHYLPREDNISOLONE,Haemophagocytic Lymphohistiocytosis,,0
+264537881,LENALIDOMIDE,Plasma Cell Myeloma,Plasma Cell Myeloma[PERSON],1
+262694171,BELUMOSUDIL,Chronic Graft Versus Host Disease,Versus Host[PERSON]|Disease[CONDITION],2
+262449621,RISPERIDONE,Behaviour Disorder,Disorder[CONDITION],1
+262944091,DUPILUMAB,Eczema,Eczema[ORG],1
+264566201,EVOLOCUMAB,Product Used For Unknown Indication,,0
+245530182,OMALIZUMAB,Asthma,Asthma[DISEASE],1
+265314281,IPILIMUMAB,Oesophageal Squamous Cell Carcinoma,,0
+262260062,RISANKIZUMAB-RZAA,Product Used For Unknown Indication|Psoriasis,,0
+262774071,PALIPERIDONE PALMITATE,Product Used For Unknown Indication,,0
+263635241,INTERFERON BETA-1A,Multiple Sclerosis,Sclerosis[DISEASE],1
+2319315015,RUXOLITINIB,Myelofibrosis|Polycythaemia Vera|Product Used For Unknown Indication,Used For Unknown Indication[ORG],1
+262989321,GLYCOPYRROLATE,Bradycardia|Drug Therapy|Product Used For Unknown Indication,Used For Unknown Indication[ORG],1
+262715292,EMPAGLIFLOZIN,Type 2 Diabetes Mellitus,Diabetes[DISEASE]|Mellitus[ORG],2
+263095731,LECANEMAB-IRMB,Product Used For Unknown Indication,,0
+263368801,DUPILUMAB,Dermatitis Atopic|Urticaria,Dermatitis[ORG],1
+264006321,ELTROMBOPAG,Immune Thrombocytopenia,,0
+265178231,FENTANYL,Back Pain,Pain[CONDITION],1
+264577601,IXAZOMIB CITRATE,Plasma Cell Myeloma Refractory,Plasma Cell Myeloma Refractory[PERSON],1
+263120241,ALBUTEROL,Chronic Obstructive Pulmonary Disease,Disease[CONDITION],1
+264103022,TOLVAPTAN,Congenital Cystic Kidney Disease|Product Used For Unknown Indication,Congenital Cystic[ORG],1
+264753471,SEMAGLUTIDE,Product Used For Unknown Indication,,0
+264882631,PERMETHRIN,Pruritus|Scabies,,0
+216448573,HYDROCODONE BITARTRATE,Product Used For Unknown Indication,,0
+249012874,SECUKINUMAB,Psoriasis,Psoriasis[DISEASE],1
+265408291,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+261104543,DABIGATRAN ETEXILATE,Anticoagulant Therapy,Therapy[DRUG_USE],1
+264702081,CANGRELOR,Acute Myocardial Infarction|Stent Placement,Acute Myocardial Infarction|Stent Placement[ORG],1
+263283231,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+265046961,FENOFIBRATE,Angiopathy|Gout|Hypertension|Hypokalaemia|Insomnia|Oedema|Pain|Product Used For Unknown Indication|Thrombosis Prophylaxis,Prophylaxis[DRUG_USE],1
+263950062,CYCLOSPORINE,Dry Eye|Irritable Bowel Syndrome,Dry Eye|Irritable Bowel[ORG]|Syndrome[CONDITION],2
+264342432,DUPILUMAB,Asthma,Asthma[DISEASE],1
+264389871,DUPILUMAB,Dermatitis Atopic,Dermatitis Atopic[FAC],1
+262800052,UPADACITINIB,Dermatitis Atopic|Product Used For Unknown Indication,,0
+263536493,BEVACIZUMAB,Hepatocellular Carcinoma,Hepatocellular Carcinoma[PERSON],1
+263302451,DUPILUMAB,Behcet'S Syndrome,Behcet'S[ORG]|Syndrome[CONDITION],2
+223994235,CERTOLIZUMAB PEGOL,Off Label Use|Product Used For Unknown Indication|Prostatic Specific Antigen|Psoriasis|Psoriatic Arthropathy|Rheumatoid Arthritis,Arthritis[DISEASE],1
+265368121,SARILUMAB,Rheumatoid Arthritis,Arthritis[DISEASE],1
+239285752,ABALOPARATIDE,Product Used For Unknown Indication|Senile Osteoporosis,Osteoporosis[DISEASE],1
+263096991,HYDROXYCHLOROQUINE,Lupus Nephritis,Lupus[DISEASE],1
+223265422,ABALOPARATIDE,Osteoporosis|Product Used For Unknown Indication,Used For Unknown Indication[WORK_OF_ART],1
+264966611,ADALIMUMAB,Arthritis|Psoriasis,,0
+263504581,CABOZANTINIB S-MALATE,Renal Cell Carcinoma,,0
+264682701,CORTICOTROPIN,Dry Eye,Dry Eye[ORG],1
+265578591,EDOXABAN TOSYLATE,Atrial Fibrillation,Atrial[DISEASE]|Fibrillation[DISEASE],2
+223279332,ABALOPARATIDE,Senile Osteoporosis,Osteoporosis[DISEASE],1
+264889071,ADAPALENE,Acne,,0

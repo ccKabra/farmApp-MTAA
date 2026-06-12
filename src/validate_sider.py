@@ -18,6 +18,8 @@ import urllib.request
 import gzip
 import io
 from config import DATA_PROCESSED, DATA_RAW, MODELS_DIR, OUTPUTS_DIR, BIOBERT_MODEL, DEVICE
+from model import BioBERTClassifier
+from patient_text import build_patient_text, MAX_LEN
 
 # ── Descargar SIDER 4.1 ───────────────────────────────────────────────────────
 SIDER_URL = "http://sideeffects.embl.de/media/download/meddra_all_se.tsv.gz"
@@ -82,19 +84,6 @@ else:
     name_to_stitch = {}
 
 # ── Cargar modelo BioBERT fine-tuned ─────────────────────────────────────────
-class BioBERTClassifier(nn.Module):
-    def __init__(self, bert_model, num_labels, dropout=0.3):
-        super().__init__()
-        self.bert = bert_model
-        hidden = self.bert.config.hidden_size
-        self.classifier = nn.Sequential(
-            nn.Dropout(dropout), nn.Linear(hidden, 256),
-            nn.ReLU(), nn.Dropout(dropout), nn.Linear(256, num_labels)
-        )
-    def forward(self, input_ids, attention_mask):
-        out = self.bert(input_ids=input_ids, attention_mask=attention_mask)
-        return self.classifier(out.last_hidden_state[:, 0, :])
-
 save_dir = MODELS_DIR / "biobert_finetuned"
 label_df = pd.read_csv(save_dir / "label_names.csv")
 label_names = label_df["label"].tolist()
@@ -122,10 +111,11 @@ for drug in top_drugs:
     stitch_id = name_to_stitch.get(drug.upper())
     sider_known = sider_effects.get(stitch_id, set()) if stitch_id else set()
 
-    # Predecir para este fármaco (paciente genérico)
-    text = f"patient age 55 years female. drug: {drug}. indication: unknown"
+    # Predecir para este fármaco (paciente genérico: todos los atributos unknown,
+    # SIDER describe efectos del farmaco, no de un paciente particular)
+    text = build_patient_text(drugs=drug)
     enc = tokenizer(text, return_tensors="pt", truncation=True,
-                    max_length=128, padding="max_length").to(DEVICE)
+                    max_length=MAX_LEN, padding="max_length").to(DEVICE)
     with torch.no_grad():
         logits = model(enc["input_ids"], enc["attention_mask"])
         probs = torch.sigmoid(logits).cpu().numpy()[0]
