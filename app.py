@@ -6,6 +6,7 @@ Ejecutar: venv\Scripts\streamlit run app.py
 import sys
 import json
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 import torch
@@ -17,6 +18,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from model import load_finetuned_model
 from patient_text import build_patient_text, MAX_LEN
 from translations import translate_effect
+from pipeline_story import pipeline_html, decisions_html
 
 DATA_DIR = ROOT / "data" / "processed"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -69,9 +71,9 @@ def predict(model, tokenizer, label_names, thresholds,
 
 # ── UI ────────────────────────────────────────────────────────────────────────
 st.set_page_config(page_title="FarmApp - Prediccion de Efectos Adversos",
-                   page_icon="💊", layout="wide")
+                   page_icon="Rx", layout="wide")
 
-st.title("💊 Sistema de Prediccion de Efectos Adversos")
+st.title("Sistema de Prediccion de Efectos Adversos")
 st.caption("Modelo BioBERT fine-tuned sobre FDA FAERS Q1 2026 — Proyecto Mineria de Texto y Aprendizaje Automatico")
 
 with st.spinner("Cargando modelo BioBERT..."):
@@ -135,11 +137,37 @@ def map_drug_to_sider(drug_name, name_to_stitch):
                     break
     return stitch_id
 
-tab_pred, tab_test, tab_analysis = st.tabs([
-    "🔮 Predecir paciente nuevo",
-    "📋 Casos reales de test (30%)",
-    "📊 Analisis del modelo",
+tab_story, tab_pred, tab_test, tab_analysis = st.tabs([
+    "Como lo hicimos",
+    "Predecir paciente nuevo",
+    "Casos reales de test (30%)",
+    "Analisis del modelo",
 ])
+
+# ── Pestania 0: el trasfondo del proyecto (para defender oralmente) ───────────
+with tab_story:
+    st.markdown(
+        "El valor del proyecto no es *acertar* un efecto adverso, sino **el "
+        "proceso completo de mineria de texto y aprendizaje automatico**: de "
+        "donde salen los datos, como los limpiamos y ordenamos, en que conceptos "
+        "nos apoyamos y como evaluamos. Este es el recorrido, paso a paso."
+    )
+    components.html(pipeline_html(), height=620, scrolling=False)
+    st.caption(
+        "Cada etapa de arriba se corresponde con un modulo real de `src/`. "
+        "La animacion avanza sola; pasa el mouse por una etapa para detenerte en ella."
+    )
+
+    st.markdown("---")
+    st.subheader("Problemas que tuvimos y como los resolvimos")
+    st.markdown(
+        "Los datos reales nunca vienen listos. Estas son las decisiones, "
+        "estrategias y atajos que tomamos para pasar de archivos crudos de la FDA "
+        "a un dato que el modelo pueda aprender. El color del borde indica el tipo: "
+        "**datos** (azul), **rigor metodologico** (verde), **modelo** (violeta) e "
+        "**ingenieria** (naranja)."
+    )
+    components.html(decisions_html(), height=820, scrolling=True)
 
 # ── Sidebar: mismos atributos con los que se entreno el modelo ────────────────
 st.sidebar.header("Datos del paciente")
@@ -230,7 +258,7 @@ with tab_pred:
 
         # ── Validacion contra SIDER 4.1 ──────────────────────────────────────
         st.markdown("---")
-        st.subheader("🔬 Validacion contra SIDER 4.1")
+        st.subheader("Validacion contra SIDER 4.1")
 
         name_to_stitch, sider_effects = load_sider()
 
@@ -241,7 +269,7 @@ with tab_pred:
             stitch_id = map_drug_to_sider(drug_input, name_to_stitch)
 
             if not stitch_id:
-                st.info(f"⚠️ '{drug_input}' no se encontro en SIDER 4.1. No todos los "
+                st.info(f"'{drug_input}' no se encontro en SIDER 4.1. No todos los "
                         "farmacos estan en la base de datos (1430 farmacos disponibles).")
             else:
                 known_effects = sider_effects.get(stitch_id, set())
@@ -284,11 +312,11 @@ with tab_pred:
                         comparison_rows.append({
                             "Efecto": translate_effect(effect),
                             "Probabilidad": f"{r['probability']:.1%}",
-                            "Predicho": "✅ Si" if was_predicted else "❌ No",
-                            "En SIDER": "✅ Confirmado" if in_sider else "⚠️ No registrado",
-                            "Resultado": "✅ Acierto" if (was_predicted and in_sider) else
-                                         "🔍 Probable" if (not was_predicted and in_sider) else
-                                         "⚠️ Sin evidencia SIDER" if was_predicted else "—",
+                            "Predicho": "Si" if was_predicted else "No",
+                            "En SIDER": "Confirmado" if in_sider else "No registrado",
+                            "Resultado": "Acierto" if (was_predicted and in_sider) else
+                                         "Probable" if (not was_predicted and in_sider) else
+                                         "Sin evidencia SIDER" if was_predicted else "—",
                         })
                     st.dataframe(pd.DataFrame(comparison_rows),
                                  use_container_width=True, hide_index=True)
@@ -371,19 +399,19 @@ with tab_test:
             )
             d1, d2, d3 = st.columns(3)
             with d1:
-                st.markdown("#### ✅ Aciertos (TP)")
+                st.markdown("#### Aciertos (TP)")
                 for e in (row["aciertos_TP"].split("|") if row["aciertos_TP"] else []):
                     st.markdown(f"- {translate_effect(e)}")
                 if not row["aciertos_TP"]:
                     st.caption("Ninguno")
             with d2:
-                st.markdown("#### ❌ No detectadas (FN)")
+                st.markdown("#### No detectadas (FN)")
                 for e in (row["no_detectadas_FN"].split("|") if row["no_detectadas_FN"] else []):
                     st.markdown(f"- {translate_effect(e)}")
                 if not row["no_detectadas_FN"]:
                     st.caption("Ninguna")
             with d3:
-                st.markdown("#### ⚠️ Predichas de mas (FP)")
+                st.markdown("#### Predichas de mas (FP)")
                 for e in (row["falsos_positivos_FP"].split("|") if row["falsos_positivos_FP"] else []):
                     st.markdown(f"- {translate_effect(e)}")
                 if not row["falsos_positivos_FP"]:
