@@ -46,16 +46,17 @@ farmApp/
     ├── cross_validation.py         # Etapa 3b: K-Fold + curvas de aprendizaje
     ├── biobert_embeddings.py       # Etapa 4a: embeddings BioBERT
     ├── train_rf_biobert.py         # Etapa 4b: RF con embeddings BioBERT
-    ├── train_biobert_finetune.py   # Etapa 5: fine-tuning BioBERT (modo clasico)
-    ├── train.py                    # Etapa 5 alt: entrenamiento resumable por tandas
-    ├── tune_threshold.py           # Etapa 5b: umbral optimo por etiqueta
+    ├── train.py                    # Etapa 5: entrenamiento resumable por tandas BioBERT
+    ├── recalibrate_thresholds.py   # Etapa 5b: calibración rápida de umbrales (F2/F-beta)
     ├── eval_test_cases.py          # Etapa 5c: tabla de predicciones vs realidad
     ├── validate_sider.py           # Etapa 6: validacion contra SIDER 4.1
     ├── visualize.py                # Etapa 7: grafos, heatmaps, Plotly
     ├── naive_bayes_baseline.py     # Extra: Naive Bayes (Unidad 5)
     ├── ner_extract.py              # Extra: NER biomedico (Unidad 6)
     ├── drug_similarity.py          # Extra: similitud coseno entre farmacos (Unidad 2)
-    └── (sin tests auxiliares)
+    └── archive/                    # Carpeta para archivar scripts obsoletos o duplicados
+        ├── train_biobert_finetune.py # Versión vieja de entrenamiento BioBERT
+        └── tune_threshold.py         # Versión vieja de tuneo de umbral F1
 ```
 
 ---
@@ -1150,20 +1151,15 @@ salidas (sigmoid implícita vía `BCEWithLogitsLoss`). Función
 `load_finetuned_model()` que reconstruye el modelo desde
 `models/biobert_finetuned/`.
 
-### `src/train_biobert_finetune.py` — Etapa 5 (Unidad 4 + 5-II)
-Fine-tuning clásico (loop entero en un solo run). Optimizador Adam,
-`BCEWithLogitsLoss` con `pos_weight` clippeado a `POS_WEIGHT_CAP` para
-balancear clases. Guarda en `models/biobert_finetuned/`.
-
 ### `src/train.py` — Versión resumable por tandas
-Mismo algoritmo que `train_biobert_finetune.py`, pero corre solo
-`EPOCHS_PER_RUN` épocas por ejecución, persistiendo un `checkpoint.pt`
-atómico (`tmp` + `os.replace`) que permite continuar tras un corte. Usa
-`get_linear_schedule_with_warmup` para estabilizar el aprendizaje.
+Mismo algoritmo de fine-tuning base, pero corre solo `EPOCHS_PER_RUN` épocas por ejecución, persistiendo un `checkpoint.pt` atómico (`tmp` + `os.replace`) que permite continuar tras un corte. Usa `get_linear_schedule_with_warmup` para estabilizar el aprendizaje.
 
-### `src/tune_threshold.py` — Etapa 5b (Unidad 3)
-Para cada etiqueta busca por grid el umbral que maximiza F1 sobre el conjunto
-de validación. Guarda `thresholds.npy`.
+### `src/recalibrate_thresholds.py` — Etapa 5b (Calibración Rápida)
+Script para recalibrar los umbrales de decisión sin necesidad de reentrenar el modelo de lenguaje en CPU lenta. Corre inferencia sobre el set de validación una sola vez y guarda el resultado en caché (`outputs/val_probs_cache.npz`). Permite calibrar usando optimización de F-beta (ej. F2-Score) para aumentar el recall y la cobertura de respuesta del modelo, guardando los nuevos umbrales en `models/biobert_finetuned/thresholds.npy`.
+
+### `src/archive/` — Scripts Obsoletos y de Iteración Previa
+- `train_biobert_finetune.py`: Fine-tuning clásico (loop entero en un solo run).
+- `tune_threshold.py`: Tuneo original de umbrales maximizando F1 clásico sobre validación.
 
 ### `src/naive_bayes_baseline.py` — Etapa extra (Unidad 5-I)
 `BernoulliNB` envuelto en `OneVsRestClassifier` sobre TF-IDF; tercer baseline

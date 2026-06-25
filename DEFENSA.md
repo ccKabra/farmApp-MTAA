@@ -44,9 +44,7 @@ casi todo (probabilidades aplanadas en 60-67%). Cap a 10 = recall razonable sin
 sobre-predicción masiva. Se usa en `BCEWithLogitsLoss(pos_weight=...)`.
 
 **¿Por qué umbral por etiqueta y no 0.5 fijo?**
-El fine-tuning base tiene recall alto pero precisión baja. Cada etiqueta tiene su
-umbral óptimo (busca el que maximiza F1 sobre el set de validación, 10% del train).
-Se guardan en `thresholds.npy`.
+El fine-tuning base tiene recall alto pero precisión baja. Cada etiqueta tiene su umbral óptimo. Optimizamos usando F2-Score (para darle mayor importancia al Recall y así elevar el porcentaje de respuesta y cobertura de aciertos del modelo en casos de test, sin que clases desbalanceadas queden en silencio). Estos umbrales se recalibran de forma rápida y sin reentrenar en CPU usando el script `src/recalibrate_thresholds.py` (que cachea predicciones en `outputs/val_probs_cache.npz`) y se guardan en `thresholds.npy`.
 
 **¿Cómo evitás el data leakage?**
 En `prepare_features.py`: **split primero**, después TF-IDF, mediana de edad y
@@ -88,7 +86,6 @@ no reimplementa nada. El "slider de sensibilidad" solo escala los umbrales guard
   ~50 casos). Lo importante es la **mejora relativa** entre modelos y la metodología.
 - Overfitting visible en la curva de aprendizaje del RF (gap train/test): otra razón
   para BioBERT, que generaliza mejor por el pre-entrenamiento.
-- Hay scripts de entrenamiento "viejos" (`train_biobert_finetune.py`, `tune_threshold.py`)
-  conservados a propósito: documentan la iteración base → flujo resumable nuevo (`train.py`).
+- Hay scripts de entrenamiento "viejos" (como `train_biobert_finetune.py` y `tune_threshold.py`) conservados a modo de documentación histórica, pero movidos a `src/archive/` para mantener ordenada la raíz del código.
 </content>
 </invoke>

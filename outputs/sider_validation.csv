@@ -1,31 +1,31 @@
 drug,stitch_found,sider_effects_in_vocab,predicted,tp,precision_vs_sider,recall_vs_sider,f1_vs_sider,predicted_effects
-DUPILUMAB,False,0,8,0,,,,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Injection Site Pain|Product Storage Error
-TIRZEPATIDE,False,0,8,0,,,,Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Injection Site Pain|Nausea|No Adverse Event|Product Storage Error
-ABALOPARATIDE,False,0,6,0,,,,Drug Ineffective|Gastrointestinal Disorder|Illness|Nausea|No Adverse Event|Product Storage Error
-RISANKIZUMAB-RZAA,False,0,9,0,,,,Alopecia|Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|No Adverse Event|Product Storage Error
-LENALIDOMIDE,True,60,9,3,0.333,0.05,0.087,Alopecia|Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Injection Site Pain|Product Storage Error
-COPPER,True,6,7,0,0.0,0.0,0.0,Completed Suicide|Death|Device Breakage|Drug Ineffective|Gastrointestinal Disorder|Illness|Product Storage Error
-UPADACITINIB,False,0,8,0,,,,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Nausea|Product Storage Error
-VEDOLIZUMAB,False,0,7,0,,,,Alopecia|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error
-CABOZANTINIB S-MALATE,False,0,8,0,,,,Alopecia|Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error
-SOMATROPIN,False,0,12,0,,,,Abdominal Discomfort|Anaemia|Completed Suicide|Device Breakage|Drug Dose Omission By Device|Drug Ineffective|Gastrointestinal Disorder|Illness|Nausea|Off Label Use|Pneumonia|Product Storage Error
-SEMAGLUTIDE,False,0,8,0,,,,Alopecia|Completed Suicide|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error|Seizure
-ADAPALENE,True,10,8,1,0.125,0.1,0.111,Completed Suicide|Death|Drug Ineffective|Gastrointestinal Disorder|Illness|Nausea|No Adverse Event|Product Storage Error
-CORTICOTROPIN,False,0,6,0,,,,Completed Suicide|Drug Ineffective|Gastrointestinal Disorder|Illness|Nausea|Product Storage Error
-PEMBROLIZUMAB,False,0,7,0,,,,Alopecia|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error
-ADALIMUMAB,False,0,8,0,,,,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Injection Site Pain|Product Storage Error
-INFLIXIMAB,False,0,8,0,,,,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Nausea|Product Storage Error
-ACETAMINOPHEN,True,41,9,1,0.111,0.024,0.04,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error|Seizure|Swelling
-INSULIN GLARGINE,False,0,8,0,,,,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|No Adverse Event|Product Storage Error
-CLOZAPINE,True,48,8,2,0.25,0.042,0.071,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error|Seizure
-CENOBAMATE,False,0,9,0,,,,Alopecia|Completed Suicide|Death|Drug Ineffective|Gastrointestinal Disorder|Illness|Product Storage Error|Seizure|Swelling
-GUSELKUMAB,False,0,7,0,,,,Alopecia|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error
-RITUXIMAB,False,0,9,0,,,,Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Nausea|Pneumonia|Product Storage Error
-NEMOLIZUMAB-ILTO,False,0,8,0,,,,Alopecia|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|No Adverse Event|Product Storage Error
-PIMAVANSERIN TARTRATE,False,0,6,0,,,,Completed Suicide|Drug Ineffective|Gastrointestinal Disorder|Illness|Product Storage Error|Seizure
-TREPROSTINIL,True,37,9,1,0.111,0.027,0.043,Alopecia|Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Nausea|Product Storage Error
-POMALIDOMIDE,True,34,9,2,0.222,0.059,0.093,Alopecia|Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Nausea|Product Storage Error
-HUMAN IMMUNOGLOBULIN G,False,0,9,0,,,,Alopecia|Completed Suicide|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Nausea|Pneumonia|Product Storage Error
-BIMEKIZUMAB-BKZX,False,0,9,0,,,,Alopecia|Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|No Adverse Event|Product Storage Error
-OFATUMUMAB,True,29,7,2,0.286,0.069,0.111,Alopecia|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error
-OMALIZUMAB,False,0,8,0,,,,Alopecia|Completed Suicide|Death|Drug Ineffective|Dysphagia|Gastrointestinal Disorder|Illness|Product Storage Error
+DUPILUMAB,False,0,2,0,,,,Exposure Via Skin Contact|Rash
+TIRZEPATIDE,False,0,5,0,,,,Alopecia|Diarrhoea|Fatigue|Nausea|Vomiting
+LENALIDOMIDE,True,69,5,4,0.8,0.058,0.108,Death|Neuropathy Peripheral|Neutropenia|Pneumonia|Rash
+VEDOLIZUMAB,False,0,8,0,,,,Blood Pressure Increased|Cerebrovascular Accident|Death|Fatigue|Injection Site Erythema|Malaise|Pneumonia|Urinary Tract Infection
+RISANKIZUMAB-RZAA,False,0,2,0,,,,Cerebrovascular Accident|Death
+SEMAGLUTIDE,False,0,13,0,,,,Abdominal Pain Upper|Asthenia|Constipation|Decreased Appetite|Dehydration|Diarrhoea|Dizziness|Fatigue|Gastrointestinal Disorder|Memory Impairment|Nausea|Vomiting|Weight Decreased
+UPADACITINIB,False,0,2,0,,,,Back Pain|Death
+ABALOPARATIDE,False,0,11,0,,,,Alopecia|Asthenia|Back Pain|Blood Pressure Increased|Dizziness|Fatigue|Feeling Abnormal|Headache|Myalgia|Nausea|Palpitations
+ADALIMUMAB,False,0,4,0,,,,Cerebrovascular Accident|Device Malfunction|Injection Site Erythema|Injection Site Pain
+SOMATROPIN,False,0,3,0,,,,Device Delivery System Issue|Device Malfunction|Injection Site Pain
+ACETAMINOPHEN,True,45,4,3,0.75,0.067,0.122,Death|Dizziness|Nausea|Vomiting
+HUMAN IMMUNOGLOBULIN G,False,0,7,0,,,,Dyspnoea|Hypersensitivity|Infusion Related Reaction|Malaise|Nausea|Pneumonia|Rash
+BIMEKIZUMAB-BKZX,False,0,5,0,,,,Arthralgia|Fatigue|Injection Site Erythema|Injection Site Pain|Myalgia
+RELUGOLIX,False,0,4,0,,,,Asthenia|Dizziness|Fatigue|Feeling Abnormal
+PIMAVANSERIN TARTRATE,False,0,2,0,,,,Adverse Drug Reaction|Death
+PEMBROLIZUMAB,False,0,3,0,,,,Cerebrovascular Accident|Death|Pneumonia
+INSULIN GLARGINE,False,0,5,0,,,,Blood Glucose Increased|Cerebrovascular Accident|Dizziness|Feeling Abnormal|Visual Impairment
+CERTOLIZUMAB PEGOL,False,0,2,0,,,,Injection Site Erythema|Rash
+DAPAGLIFLOZIN,True,18,2,1,0.5,0.056,0.1,Cerebrovascular Accident|Death
+RITUXIMAB,False,0,2,0,,,,Intentional Product Use Issue|Pneumonia
+TREPROSTINIL,True,40,12,10,0.833,0.25,0.385,Asthenia|Blood Pressure Increased|Cough|Death|Depression|Diarrhoea|Dizziness|Dyspnoea|Fatigue|Feeling Abnormal|Headache|Nausea
+INFLIXIMAB,False,0,6,0,,,,Death|Infusion Related Reaction|Intentional Product Use Issue|Pneumonia|Pyrexia|Urinary Tract Infection
+APIXABAN,True,10,2,0,0.0,0.0,0.0,Cerebrovascular Accident|Death
+NEMOLIZUMAB-ILTO,False,0,2,0,,,,Device Malfunction|Rash
+ABATACEPT,False,0,2,0,,,,Death|Pain
+OMALIZUMAB,False,0,3,0,,,,Pneumonia|Rash|Urticaria
+CLOZAPINE,True,52,2,1,0.5,0.019,0.037,Death|Pneumonia
+ALBUTEROL SULFATE,False,0,3,0,,,,Cough|Device Delivery System Issue|Dyspnoea
+POMALIDOMIDE,True,38,4,3,0.75,0.079,0.143,Asthenia|Death|Fatigue|Rash
+GUSELKUMAB,False,0,5,0,,,,Injection Site Erythema|Nausea|Pneumonia|Pyrexia|Rash
