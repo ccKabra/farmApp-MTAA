@@ -1,14 +1,3 @@
-"""
-Etapa NER: Extraccion de entidades biomedicas con scispaCy (o spaCy como fallback).
-Demuestra extraccion de entidades del texto libre de indicaciones FAERS.
-Cubre Unidad 6 (Procesamiento de Lenguaje Natural).
-
-Modelos intentados en orden:
-  1. en_core_sci_md  (scispaCy, biomedico completo)
-  2. en_core_sci_sm  (scispaCy, biomedico ligero)
-  3. en_core_web_sm  (spaCy general, fallback garantizado)
-"""
-
 import spacy
 import subprocess
 import sys
@@ -18,14 +7,8 @@ from collections import Counter
 from config import DATA_PROCESSED, OUTPUTS_DIR
 
 def load_best_model():
-    """
-    scispaCy requiere thinc<8.3 pero nuestro spaCy 3.8 usa thinc 8.3 -> incompatible en Py3.13.
-    Usamos en_core_web_sm (ya instalado) y agregamos un EntityRuler con patrones biomedicos
-    para simular reconocimiento de entidades de indicaciones medicas.
-    """
     nlp = spacy.load("en_core_web_sm")
 
-    # EntityRuler con terminos medicos frecuentes en FAERS
     ruler = nlp.add_pipe("entity_ruler", before="ner")
     patterns = [
         {"label": "DISEASE",  "pattern": [{"LOWER": {"IN": [
@@ -50,12 +33,10 @@ def load_best_model():
 print("Cargando modelo NLP...")
 nlp, model_used = load_best_model()
 
-# ── Cargar datos ───────────────────────────────────────────────────────────────
 df = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 sample = df[df["indications"].notna()].head(500).copy()
 print(f"Analizando {len(sample)} indicaciones...")
 
-# ── NER ────────────────────────────────────────────────────────────────────────
 all_entities = []
 ner_results = []
 
@@ -75,7 +56,6 @@ for _, row in sample.iterrows():
 ner_df = pd.DataFrame(ner_results)
 ner_df.to_csv(DATA_PROCESSED / "ner_results.csv", index=False)
 
-# ── Estadísticas ───────────────────────────────────────────────────────────────
 entity_counts = Counter(t for t, _ in all_entities)
 label_counts  = Counter(l for _, l in all_entities)
 
@@ -98,7 +78,6 @@ for _, row in ner_df[ner_df["n_entities"] > 0].head(5).iterrows():
     for ent in doc.ents:
         print(f"  [{ent.label_}] '{ent.text}'")
 
-# ── Gráficos ───────────────────────────────────────────────────────────────────
 fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 fig.suptitle(f"NER Biomedico ({model_used}) — Indicaciones FAERS", fontsize=13)
 

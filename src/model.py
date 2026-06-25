@@ -1,14 +1,8 @@
-"""
-Definicion centralizada del modelo BioBERTClassifier.
-Importar desde aqui en todos los scripts.
-"""
-
 import torch.nn as nn
 from transformers import AutoTokenizer, AutoModel
 from config import BIOBERT_MODEL, DEVICE, MODELS_DIR
 import numpy as np
 import pandas as pd
-
 
 class BioBERTClassifier(nn.Module):
     def __init__(self, bert_model, num_labels, dropout=0.3):
@@ -28,9 +22,8 @@ class BioBERTClassifier(nn.Module):
         cls = out.last_hidden_state[:, 0, :]
         return self.classifier(cls)
 
-
 def load_finetuned_model():
-    """Carga el modelo fine-tuned desde disco. Retorna (model, tokenizer, label_names, thresholds)."""
+
     import torch
     save_dir = MODELS_DIR / "biobert_finetuned"
     label_names = pd.read_csv(save_dir / "label_names.csv")["label"].tolist()

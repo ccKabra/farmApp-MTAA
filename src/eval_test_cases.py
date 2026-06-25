@@ -1,16 +1,3 @@
-"""
-Genera la tabla de comparacion prediccion vs realidad sobre el 30% de test.
-
-Corre el modelo fine-tuned sobre TODOS los casos de test (nunca vistos en
-entrenamiento) y guarda outputs/test_cases.csv con:
-  - atributos del paciente (edad, sexo, peso, farmaco, concomitantes, indicacion)
-  - reacciones reales reportadas en FAERS (las que estan en el vocabulario de 98)
-  - reacciones predichas por el modelo
-  - aciertos (TP), falsos positivos (FP) y no detectadas (FN) por caso
-
-Esta tabla es la que usa la app en la pestania "Casos reales de test".
-"""
-
 import pandas as pd
 import numpy as np
 import torch

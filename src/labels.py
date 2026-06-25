@@ -1,23 +1,8 @@
-"""
-Construccion UNICA del vocabulario de etiquetas (efectos adversos a predecir).
-
-Centraliza dos decisiones que antes estaban duplicadas en cada script:
-  1. frecuencia minima (MIN_REACTION_FREQ)
-  2. exclusion de terminos MedDRA que NO son reacciones adversas farmacologicas
-
-FAERS mezcla en el campo de reacciones muchos PT administrativos/contextuales:
-errores de medicacion, problemas de dispositivo/producto, circunstancias
-sociales (embarazo), desenlaces (hospitalizacion) y no-eventos. Si quedan en el
-target, el modelo predice cosas como "Maternal Exposure During Pregnancy" para
-un paciente de 72 anios. Aca se filtran.
-"""
-
 from collections import Counter
 from config import MIN_REACTION_FREQ
 
-# PTs de MedDRA que no son reacciones adversas farmacologicas.
 NON_ADR_LABELS = {
-    # Errores de medicacion / administracion
+
     "Inappropriate Schedule Of Product Administration",
     "Incorrect Dose Administered",
     "Product Dose Omission Issue",
@@ -25,21 +10,21 @@ NON_ADR_LABELS = {
     "Wrong Technique In Product Usage Process",
     "Overdose",
     "Accidental Exposure To Product",
-    # Problemas de producto / dispositivo
+
     "Device Breakage",
     "Device Issue",
     "Product Storage Error",
     "Product Use Issue",
     "Product Use In Unapproved Indication",
     "Off Label Use",
-    # Eficacia / administrativos
+
     "Drug Ineffective",
     "Therapeutic Product Effect Incomplete",
     "Therapy Interrupted",
     "No Adverse Event",
-    # Circunstancias / contexto, no reaccion
+
     "Maternal Exposure During Pregnancy",
-    # Desenlaces / inespecificos
+
     "Hospitalisation",
     "Illness",
     "General Physical Health Deterioration",
@@ -47,15 +32,7 @@ NON_ADR_LABELS = {
     "Toxicity To Various Agents",
 }
 
-
 def build_label_vocab(df):
-    """
-    Recibe el dataframe (columna 'reactions' con PTs separados por '|').
-    Retorna (df_filtrado, label_names) donde:
-      - label_names: lista ordenada de etiquetas validas (freq >= min y no excluidas)
-      - df_filtrado: solo casos que conservan al menos una etiqueta valida
-    Agrega/sobrescribe la columna 'reaction_list' con las etiquetas validas.
-    """
     all_reac = [r for row in df["reactions"].dropna() for r in row.split("|")]
     freq_reac = {
         r for r, n in Counter(all_reac).items()

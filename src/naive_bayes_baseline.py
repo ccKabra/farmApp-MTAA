@@ -1,11 +1,3 @@
-"""
-Etapa extra: Naive Bayes como tercer baseline (Unidad 5).
-BernoulliNB + OneVsRestClassifier sobre TF-IDF.
-Comparativa de los 3 modelos: NB, RF-TF-IDF, RF-BioBERT.
-
-Output: outputs/figures/model_comparison.png
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -54,7 +46,7 @@ results = [
     evaluate(rf,    X_train,    X_test,    Y_train, Y_test, "Random Forest + TF-IDF"),
     evaluate(rf_bb, X_bb_train, X_bb_test, Y_train, Y_test, "Random Forest + BioBERT"),
 ]
-# Agregar BioBERT fine-tuned (resultados del script anterior)
+
 results.append({
     "modelo": "BioBERT Fine-tuned",
     "F1 macro": 0.1283, "F1 micro": 0.1063, "F1 samples": 0.0980,
@@ -65,7 +57,6 @@ df_res = pd.DataFrame(results)
 print("\n=== COMPARATIVA DE MODELOS ===")
 print(df_res.to_string(index=False))
 
-# ── Grafico ───────────────────────────────────────────────────────────────────
 metrics = ["F1 macro", "F1 micro", "F1 samples", "Precision", "Recall"]
 colors  = ["steelblue", "darkorange", "mediumseagreen", "mediumpurple"]
 x = np.arange(len(metrics))

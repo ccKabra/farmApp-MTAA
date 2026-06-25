@@ -1,11 +1,3 @@
-"""
-Etapa 6: Validación contra SIDER 4.1.
-Descarga SIDER desde su URL pública y compara las predicciones del mejor modelo
-contra los efectos adversos conocidos por fármaco.
-
-SIDER usa MedDRA terms; FAERS usa MedDRA PT -> compatibles directamente.
-"""
-
 import pandas as pd
 import numpy as np
 import torch
@@ -21,7 +13,6 @@ from config import DATA_PROCESSED, DATA_RAW, MODELS_DIR, OUTPUTS_DIR, BIOBERT_MO
 from model import BioBERTClassifier
 from patient_text import build_patient_text, MAX_LEN
 
-# ── Descargar SIDER 4.1 ───────────────────────────────────────────────────────
 SIDER_URL = "http://sideeffects.embl.de/media/download/meddra_all_se.tsv.gz"
 SIDER_LOCAL = DATA_RAW / "sider_meddra_all_se.tsv"
 
@@ -41,23 +32,18 @@ if not SIDER_LOCAL.exists():
 else:
     print(f"SIDER ya existe: {SIDER_LOCAL}")
 
-# ── Cargar SIDER ──────────────────────────────────────────────────────────────
 if SIDER_LOCAL and SIDER_LOCAL.exists():
-    # Columnas: stitch_id_flat, stitch_id_stereo, umls_cui_se, meddra_type, umls_cui_meddra, side_effect_name
+
     sider = pd.read_csv(SIDER_LOCAL, sep="\t", header=None,
                         names=["stitch_flat","stitch_stereo","umls_se","meddra_type","umls_meddra","side_effect"])
     sider = sider[sider["meddra_type"] == "PT"].copy()
     sider["side_effect"] = sider["side_effect"].str.strip().str.title()
     print(f"SIDER cargado: {len(sider):,} entradas PT | {sider['stitch_flat'].nunique():,} farmacos")
 
-    # Construir dict: stitch_id -> set de efectos
     sider_effects = defaultdict(set)
     for _, row in sider.iterrows():
         sider_effects[row["stitch_flat"]].add(row["side_effect"])
 
-    # Necesitamos mapear nombres de fármacos FAERS -> STITCH IDs
-    # SIDER también provee meddra_freq.tsv con nombres, pero usamos drugnames_map
-    # Alternativa: buscar por nombre en SIDER usando drug_names.tsv
     DRUG_NAMES_URL = "http://sideeffects.embl.de/media/download/drug_names.tsv"
     drug_names_local = DATA_RAW / "sider_drug_names.tsv"
     if not drug_names_local.exists():
@@ -83,7 +69,6 @@ else:
     sider_effects = {}
     name_to_stitch = {}
 
-# ── Cargar modelo BioBERT fine-tuned ─────────────────────────────────────────
 save_dir = MODELS_DIR / "biobert_finetuned"
 label_df = pd.read_csv(save_dir / "label_names.csv")
 label_names = label_df["label"].tolist()
@@ -98,7 +83,6 @@ model.load_state_dict(torch.load(save_dir / "model.pt", map_location=DEVICE))
 model.eval()
 print("Modelo listo.")
 
-# ── Predicción para fármacos con datos en SIDER ───────────────────────────────
 df = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 top_drugs = [d for d, _ in Counter(
     [d for row in df["drug"].dropna() for d in row.split("|")]
@@ -111,8 +95,6 @@ for drug in top_drugs:
     stitch_id = name_to_stitch.get(drug.upper())
     sider_known = sider_effects.get(stitch_id, set()) if stitch_id else set()
 
-    # Predecir para este fármaco (paciente genérico: todos los atributos unknown,
-    # SIDER describe efectos del farmaco, no de un paciente particular)
     text = build_patient_text(drugs=drug)
     enc = tokenizer(text, return_tensors="pt", truncation=True,
                     max_length=MAX_LEN, padding="max_length").to(DEVICE)
@@ -121,7 +103,7 @@ for drug in top_drugs:
         probs = torch.sigmoid(logits).cpu().numpy()[0]
 
     predicted = {label_names[j] for j, p in enumerate(probs) if p >= thresholds[j]}
-    sider_in_labels = sider_known & set(label_names)  # solo efectos que conocemos
+    sider_in_labels = sider_known & set(label_names)
 
     if sider_in_labels:
         tp = len(predicted & sider_in_labels)
@@ -163,7 +145,6 @@ else:
 
 print(f"\nResultados completos en: outputs/sider_validation.csv")
 
-# ── Gráfico ───────────────────────────────────────────────────────────────────
 fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 fig.suptitle("Validacion vs SIDER 4.1", fontsize=13)
 
@@ -177,7 +158,6 @@ else:
     axes[0].text(0.5, 0.5, "Sin mapeo FAERS->SIDER", ha="center", va="center")
     axes[0].set_title("F1 por farmaco vs SIDER")
 
-# Distribución de predicciones por fármaco
 pred_counts = results_df.set_index("drug")["predicted"].sort_values(ascending=True)
 axes[1].barh(pred_counts.index, pred_counts.values, color="steelblue")
 axes[1].set_title("Efectos adversos predichos por farmaco")

@@ -1,21 +1,3 @@
-"""
-Entrenamiento RESUMABLE y POR TANDAS de BioBERT (multi-label).
-
-Reemplaza al flujo viejo de 2 scripts (train_biobert_finetune + tune_threshold).
-Caracteristicas pensadas para no fundir la PC y poder cortar cuando quieras:
-
-  * Guarda un checkpoint DESPUES DE CADA EPOCA (de forma atomica: escribe a un
-    archivo temporal y lo renombra, asi un corte a mitad no corrompe nada).
-  * Cada corrida hace solo EPOCHS_PER_RUN epocas y termina. Volves a correrlo
-    y CONTINUA donde quedo, hasta llegar a TOTAL_EPOCHS.
-  * Si interrumpis a mitad de una epoca, perdes solo esa epoca; el resto esta
-    guardado. Al reanudar arranca desde la ultima epoca completa.
-
-Uso normal:  paso2_entrenar.bat   (correrlo varias veces)
-Estado:      models/biobert_finetuned/checkpoint.pt
-Al terminar TOTAL_EPOCHS escribe el modelo final (model.pt + thresholds.npy).
-"""
-
 import os
 import numpy as np
 import pandas as pd
@@ -37,7 +19,6 @@ LR = 2e-5
 SAVE_DIR = MODELS_DIR / "biobert_finetuned"
 CKPT = SAVE_DIR / "checkpoint.pt"
 
-
 class FAERSDataset(Dataset):
     def __init__(self, texts, labels, tokenizer):
         self.texts = texts
@@ -54,7 +35,6 @@ class FAERSDataset(Dataset):
                 "attention_mask": enc["attention_mask"].squeeze(0),
                 "labels": self.labels[idx]}
 
-
 def get_probs(model, loader):
     model.eval()
     probs, labels = [], []
@@ -64,7 +44,6 @@ def get_probs(model, loader):
             probs.append(torch.sigmoid(logits).cpu().numpy())
             labels.append(b["labels"].numpy())
     return np.vstack(probs), np.vstack(labels)
-
 
 def best_thresholds(probs, labels, grid=np.arange(0.1, 0.9, 0.05)):
     th = np.full(probs.shape[1], 0.5)
@@ -77,20 +56,17 @@ def best_thresholds(probs, labels, grid=np.arange(0.1, 0.9, 0.05)):
         th[j] = best
     return th
 
-
 def atomic_save(obj, path):
-    """Guarda a un .tmp y renombra: un corte durante la escritura no corrompe."""
+
     tmp = path.with_suffix(".tmp")
     torch.save(obj, tmp)
     os.replace(tmp, path)
 
-
 def main():
-    # ── Datos (split determinista: misma semilla siempre) ─────────────────────
+
     df, label_names, train_idx, test_idx = load_split()
     num_labels = len(label_names)
 
-    # Val = 10% del train (para calibrar umbral); resto entrena
     val_n = int(len(train_idx) * 0.1)
     val_idx, tr_idx = train_idx[:val_n], train_idx[val_n:]
 
@@ -111,7 +87,6 @@ def main():
     print(f"Casos: {len(df):,} | Etiquetas: {num_labels} | "
           f"Train: {len(tr_idx):,} Val: {len(val_idx):,} Test: {len(test_idx):,}")
 
-    # ── Modelo / optimizador / scheduler ──────────────────────────────────────
     model = BioBERTClassifier(AutoModel.from_pretrained(BIOBERT_MODEL), num_labels).to(DEVICE)
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=0.01)
     total_steps = len(train_loader) * TOTAL_EPOCHS
@@ -122,14 +97,12 @@ def main():
                               dtype=torch.float32).to(DEVICE)
     criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
-    # ── Reanudar si hay checkpoint ────────────────────────────────────────────
     start_epoch = 0
     history = {"train_loss": [], "val_f1": []}
     best_val_f1, best_state, best_th = 0.0, None, np.full(num_labels, 0.5)
 
     if CKPT.exists():
-        # weights_only=False: el checkpoint es nuestro y trae arrays numpy
-        # (umbrales, historial). PyTorch 2.6+ exige declararlo explicitamente.
+
         ck = torch.load(CKPT, map_location=DEVICE, weights_only=False)
         if ck.get("num_labels") != num_labels:
             print(f"AVISO: el checkpoint tiene {ck.get('num_labels')} etiquetas y ahora hay "
@@ -185,7 +158,6 @@ def main():
             best_th = th.copy()
             print(f"  ** mejor modelo (val F1={best_val_f1:.4f}) **")
 
-        # Checkpoint atomico tras CADA epoca
         atomic_save({
             "epoch": epoch, "num_labels": num_labels, "label_names": label_names,
             "model": model.state_dict(), "optimizer": optimizer.state_dict(),
@@ -193,7 +165,6 @@ def main():
             "best_val_f1": best_val_f1, "best_state": best_state, "best_th": best_th,
         }, CKPT)
 
-    # ── Guardar SIEMPRE el mejor modelo hasta ahora (para poder probar entre tandas) ──
     torch.save(best_state, SAVE_DIR / "model.pt")
     np.save(SAVE_DIR / "thresholds.npy", best_th)
     tokenizer.save_pretrained(SAVE_DIR)
@@ -207,7 +178,6 @@ def main():
     else:
         print(f"Tanda terminada en epoca {end_epoch}/{TOTAL_EPOCHS}. "
               f"Volve a correr paso2_entrenar.bat para seguir.")
-
 
 if __name__ == "__main__":
     main()

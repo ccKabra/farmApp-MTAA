@@ -1,8 +1,3 @@
-"""
-Etapa 4b: RF con embeddings BioBERT. Compara vs baseline TF-IDF.
-Output: models/rf_biobert.pkl, outputs/figures/rf_biobert_metrics.png
-"""
-
 import pandas as pd
 import numpy as np
 import pickle
@@ -64,7 +59,6 @@ with open(MODELS_DIR / "rf_biobert.pkl", "wb") as f:
     pickle.dump({"model": model, "label_names": label_names, "feature_names": X.columns.tolist()}, f)
 print(f"\nModelo guardado: models/rf_biobert.pkl")
 
-# Grafico comparativo
 fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 fig.suptitle("RF + BioBERT Embeddings vs Baseline TF-IDF", fontsize=13)
 

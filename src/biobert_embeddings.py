@@ -1,13 +1,3 @@
-"""
-Etapa 4a: Generar embeddings BioBERT para cada caso del dataset.
-Reemplaza el TF-IDF basico por representaciones semanticas densas.
-USA EL MISMO filtrado y formato de texto que el resto del pipeline
-(labels.build_label_vocab + patient_text.row_to_text) para evitar
-inconsistencias de filas y distribuciones de entrada.
-
-Output: data/processed/X_biobert.csv
-"""
-
 import pandas as pd
 import numpy as np
 import torch
@@ -51,20 +41,16 @@ df_raw = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 df_raw["age_years"] = pd.to_numeric(df_raw["age_years"], errors="coerce")
 df_raw["weight_kg"] = pd.to_numeric(df_raw.get("weight_kg"), errors="coerce")
 
-# Mismo filtrado que en entrenamiento (build_label_vocab usa config.MIN_REACTION_FREQ)
 df, _ = build_label_vocab(df_raw)
 df = df.reset_index(drop=True)
 Y = pd.read_csv(DATA_PROCESSED / "Y.csv")
 
-# Mismo formato de texto que en entrenamiento e inferencia
 texts = df.apply(row_to_text, axis=1).tolist()
 
 print(f"\nGenerando embeddings para {len(texts):,} casos...")
 embeddings = get_embeddings(texts, tokenizer, model, DEVICE)
 print(f"Embeddings shape: {embeddings.shape}")
 
-# Reconstruir X combinando features demograficos + embeddings BioBERT
-# X.csv fue construido con el mismo filtrado (prepare_features.py usa build_label_vocab)
 X_old = pd.read_csv(DATA_PROCESSED / "X.csv")
 
 if len(X_old) != len(df):

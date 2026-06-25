@@ -1,11 +1,3 @@
-"""
-Etapa 3b: Validacion cruzada k-fold sobre el baseline Random Forest.
-Cubre la Unidad 3 (aprendizaje no supervisado / validacion cruzada).
-Incluye curvas de aprendizaje para diagnosticar overfitting/underfitting.
-
-Output: outputs/figures/cross_validation.png
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,7 +7,6 @@ from sklearn.model_selection import KFold, cross_val_score, learning_curve
 from sklearn.metrics import f1_score, make_scorer
 from config import DATA_PROCESSED, OUTPUTS_DIR, RANDOM_SEED
 
-# ── Cargar datos ──────────────────────────────────────────────────────────────
 X = pd.read_csv(DATA_PROCESSED / "X.csv").values
 Y = pd.read_csv(DATA_PROCESSED / "Y.csv").values
 print(f"X: {X.shape}  |  Y: {Y.shape}")
@@ -26,7 +17,6 @@ rf = RandomForestClassifier(
 )
 model = MultiOutputClassifier(rf, n_jobs=-1)
 
-# ── K-Fold 5 pliegues ─────────────────────────────────────────────────────────
 kf = KFold(n_splits=5, shuffle=True, random_state=RANDOM_SEED)
 
 print("\nValidacion cruzada 5-fold sobre Random Forest multilabel...")
@@ -45,7 +35,6 @@ print(f"\nF1 macro promedio : {np.mean(f1_scores):.4f} (+/- {np.std(f1_scores):.
 print(f"Intervalo 95%     : [{np.mean(f1_scores) - 2*np.std(f1_scores):.4f}, "
       f"{np.mean(f1_scores) + 2*np.std(f1_scores):.4f}]")
 
-# ── Curvas de aprendizaje ─────────────────────────────────────────────────────
 print("\nCalculando curvas de aprendizaje (puede tardar unos minutos)...")
 
 def f1_macro_multilabel(estimator, X, y):
@@ -66,11 +55,9 @@ train_std  = train_scores.std(axis=1)
 val_mean   = val_scores.mean(axis=1)
 val_std    = val_scores.std(axis=1)
 
-# ── Graficos ──────────────────────────────────────────────────────────────────
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 fig.suptitle("Validacion cruzada y Curva de aprendizaje — Random Forest", fontsize=13)
 
-# Grafico 1: F1 por fold
 axes[0].bar(range(1, 6), f1_scores, color="steelblue", edgecolor="white")
 axes[0].axhline(np.mean(f1_scores), color="red", linestyle="--",
                 label=f"Media={np.mean(f1_scores):.3f}")
@@ -86,7 +73,6 @@ axes[0].set_ylabel("F1 macro"); axes[0].set_ylim(0, 0.5)
 axes[0].set_title("F1 macro por pliegue (5-fold CV)")
 axes[0].legend()
 
-# Grafico 2: Curva de aprendizaje
 axes[1].plot(train_sizes_abs, train_mean, "o-", color="steelblue", label="Train")
 axes[1].fill_between(train_sizes_abs, train_mean - train_std, train_mean + train_std,
                      alpha=0.15, color="steelblue")
@@ -98,7 +84,6 @@ axes[1].set_ylabel("F1 macro")
 axes[1].set_title("Curva de aprendizaje")
 axes[1].legend()
 
-# Diagnostico automatico
 gap = train_mean[-1] - val_mean[-1]
 if gap > 0.15:
     diag = "Overfitting detectado (gap train-val > 0.15). Reducir profundidad del arbol."

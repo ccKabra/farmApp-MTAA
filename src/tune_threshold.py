@@ -1,8 +1,3 @@
-"""
-Etapa 5b: Optimizar umbral de decisión por etiqueta y re-entrenar con más épocas.
-El fine-tuning base tiene recall alto pero precision baja -> umbral 0.5 no es óptimo.
-"""
-
 import pandas as pd
 import numpy as np
 import torch
@@ -38,14 +33,12 @@ class FAERSDataset(Dataset):
                 "attention_mask": enc["attention_mask"].squeeze(0),
                 "labels": self.labels[idx]}
 
-# ── Datos ─────────────────────────────────────────────────────────────────────
 df = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 df["age_years"] = pd.to_numeric(df["age_years"], errors="coerce")
 df, label_names = build_label_vocab(df)
 label2idx = {l: i for i, l in enumerate(label_names)}
 num_labels = len(label_names)
 
-# Texto canonico del paciente — MISMO formato que en entrenamiento e inferencia
 df["weight_kg"] = pd.to_numeric(df.get("weight_kg"), errors="coerce")
 texts = df.apply(row_to_text, axis=1).tolist()
 Y = np.zeros((len(df), num_labels), dtype=np.float32)
@@ -56,7 +49,7 @@ for i, reactions in enumerate(df["reaction_list"]):
 
 idx = list(range(len(texts)))
 train_idx, test_idx = train_test_split(idx, test_size=TEST_SIZE, random_state=RANDOM_SEED)
-# Usar 10% del train como val para tunear umbral
+
 val_size = int(len(train_idx) * 0.1)
 val_idx, train_idx = train_idx[:val_size], train_idx[val_size:]
 
@@ -74,11 +67,9 @@ train_loader = DataLoader(train_ds, batch_size=BATCH_TRAIN, shuffle=True,  num_w
 val_loader   = DataLoader(val_ds,   batch_size=BATCH_EVAL,  shuffle=False, num_workers=0)
 test_loader  = DataLoader(test_ds,  batch_size=BATCH_EVAL,  shuffle=False, num_workers=0)
 
-# ── Modelo ────────────────────────────────────────────────────────────────────
 bert_base = AutoModel.from_pretrained(BIOBERT_MODEL)
 model = BioBERTClassifier(bert_base, num_labels).to(DEVICE)
 
-# Cargar pesos previos si existen (continuar entrenamiento)
 prev_weights = MODELS_DIR / "biobert_finetuned" / "model.pt"
 if prev_weights.exists():
     model.load_state_dict(torch.load(prev_weights, map_location=DEVICE))
@@ -120,7 +111,6 @@ def find_best_thresholds(probs, labels, thresholds=np.arange(0.1, 0.9, 0.05)):
         best_t[j] = best
     return best_t
 
-# ── Entrenamiento extendido ───────────────────────────────────────────────────
 print(f"\nFine-tuning extendido: {EPOCHS} epocas adicionales")
 history = {"train_loss": [], "val_f1_macro": []}
 best_val_f1 = 0
@@ -144,7 +134,6 @@ for epoch in range(1, EPOCHS + 1):
 
     avg_loss = total_loss / len(train_loader)
 
-    # Validacion con umbral optimizado
     val_probs, val_labels = get_logits(model, val_loader)
     thresholds = find_best_thresholds(val_probs, val_labels)
     val_pred = (val_probs >= thresholds).astype(int)
@@ -160,7 +149,6 @@ for epoch in range(1, EPOCHS + 1):
         best_thresholds = thresholds.copy()
         print(f"  ** Mejor modelo guardado (F1={best_val_f1:.4f}) **")
 
-# ── Evaluacion final con mejor modelo ────────────────────────────────────────
 print("\n=== EVALUACION FINAL (mejor modelo, umbral optimo) ===")
 model.load_state_dict(best_state)
 test_probs, Y_true = get_logits(model, test_loader)
@@ -178,7 +166,6 @@ print(f"  F1 samples : {f1_sam:.4f}  (RF+BioBERT: 0.1267)")
 print(f"  Precision  : {prec:.4f}  (RF+BioBERT: 0.0990)")
 print(f"  Recall     : {rec:.4f}  (RF+BioBERT: 0.2096)")
 
-# ── Guardar ───────────────────────────────────────────────────────────────────
 save_dir = MODELS_DIR / "biobert_finetuned"
 save_dir.mkdir(parents=True, exist_ok=True)
 torch.save(model.state_dict(), save_dir / "model.pt")
@@ -188,7 +175,6 @@ pd.DataFrame({"label": label_names, "threshold": best_thresholds}).to_csv(
     save_dir / "label_thresholds.csv", index=False)
 print(f"\nModelo y umbrales guardados en: {save_dir}")
 
-# ── Grafico ───────────────────────────────────────────────────────────────────
 f1_per_label = f1_score(Y_true, Y_pred, average=None, zero_division=0)
 label_metrics = pd.DataFrame({
     "label": label_names, "f1": f1_per_label, "threshold": best_thresholds

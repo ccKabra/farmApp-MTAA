@@ -1,12 +1,3 @@
-"""
-Etapa 5: Fine-tuning BioBERT como clasificador multi-label.
-Entrada: texto canonico del paciente (edad, sexo, peso, farmaco, medicaciones
-concomitantes, indicacion) definido en patient_text.py -> etiquetas binarias
-GPU: RTX 4070 Ti SUPER (CUDA)
-
-Output: models/biobert_finetuned/, outputs/figures/finetune_metrics.png
-"""
-
 import pandas as pd
 import numpy as np
 import torch
@@ -24,14 +15,12 @@ from model import BioBERTClassifier
 from patient_text import row_to_text, MAX_LEN
 from labels import build_label_vocab
 
-# ── Hiperparámetros ───────────────────────────────────────────────────────────
 BATCH_TRAIN = 32
 BATCH_EVAL  = 64
 EPOCHS    = BASE_EPOCHS
 LR        = 2e-5
-THRESHOLD = 0.5   # umbral para convertir probabilidad a etiqueta binaria
+THRESHOLD = 0.5
 
-# ── Dataset ───────────────────────────────────────────────────────────────────
 class FAERSDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len):
         self.texts = texts
@@ -56,8 +45,6 @@ class FAERSDataset(Dataset):
             "labels":         self.labels[idx]
         }
 
-
-# ── Cargar datos ──────────────────────────────────────────────────────────────
 print("Cargando datos...")
 df = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 df["age_years"] = pd.to_numeric(df["age_years"], errors="coerce")
@@ -67,19 +54,16 @@ label2idx = {l: i for i, l in enumerate(label_names)}
 num_labels = len(label_names)
 print(f"Casos: {len(df):,}  |  Etiquetas: {num_labels}")
 
-# Texto de entrada: representacion canonica del paciente (misma en inferencia)
 df["weight_kg"] = pd.to_numeric(df.get("weight_kg"), errors="coerce")
 texts = df.apply(row_to_text, axis=1).tolist()
 print(f"Ejemplo de entrada: {texts[0]}")
 
-# Matriz Y
 Y = np.zeros((len(df), num_labels), dtype=np.float32)
 for i, reactions in enumerate(df["reaction_list"]):
     for r in reactions:
         if r in label2idx:
             Y[i, label2idx[r]] = 1.0
 
-# Split 70/30
 idx = list(range(len(texts)))
 train_idx, test_idx = train_test_split(idx, test_size=TEST_SIZE, random_state=RANDOM_SEED)
 texts_train = [texts[i] for i in train_idx]
@@ -87,7 +71,6 @@ texts_test  = [texts[i] for i in test_idx]
 Y_train, Y_test = Y[train_idx], Y[test_idx]
 print(f"Train: {len(train_idx):,}  |  Test: {len(test_idx):,}")
 
-# ── Tokenizer y DataLoaders ───────────────────────────────────────────────────
 print(f"\nCargando tokenizer BioBERT...")
 tokenizer = AutoTokenizer.from_pretrained(BIOBERT_MODEL)
 
@@ -96,7 +79,6 @@ test_ds  = FAERSDataset(texts_test,  Y_test,  tokenizer, MAX_LEN)
 train_loader = DataLoader(train_ds, batch_size=BATCH_TRAIN, shuffle=True,  num_workers=0)
 test_loader  = DataLoader(test_ds,  batch_size=BATCH_EVAL,  shuffle=False, num_workers=0)
 
-# ── Modelo y optimizador ──────────────────────────────────────────────────────
 print("Cargando BioBERT base...")
 bert_base = AutoModel.from_pretrained(BIOBERT_MODEL)
 model = BioBERTClassifier(bert_base, num_labels).to(DEVICE)
@@ -107,17 +89,12 @@ scheduler = get_linear_schedule_with_warmup(
     optimizer, num_warmup_steps=total_steps // 10, num_training_steps=total_steps
 )
 
-# Pos weight para clases desbalanceadas, CAPADO para no inflar todos los logits.
-# Sin cap, neg/pos llega a ~100 en etiquetas raras y el modelo predice "si" a
-# casi todo (probabilidades aplanadas en 60-67%). Cap a 10 = recall razonable
-# sin sobre-prediccion masiva.
 pos_counts = Y_train.sum(axis=0)
 neg_counts = len(Y_train) - pos_counts
 pos_weight = np.minimum(neg_counts / (pos_counts + 1e-6), POS_WEIGHT_CAP)
 pos_weight = torch.tensor(pos_weight, dtype=torch.float32).to(DEVICE)
 criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 
-# ── Entrenamiento ─────────────────────────────────────────────────────────────
 def evaluate(model, loader, threshold=THRESHOLD):
     model.eval()
     all_preds, all_labels = [], []
@@ -180,7 +157,6 @@ for epoch in range(1, EPOCHS + 1):
     print(f"\n[Epoca {epoch}] train_loss={avg_train_loss:.4f} | val_loss={val_loss:.4f} | "
           f"F1_macro={f1_mac:.4f} | F1_micro={f1_mic:.4f} | F1_samples={f1_sam:.4f}\n")
 
-# ── Evaluación final ──────────────────────────────────────────────────────────
 print("=== EVALUACION FINAL ===")
 _, f1_mac, f1_mic, f1_sam, Y_pred_final, Y_true_final = evaluate(model, test_loader)
 
@@ -204,7 +180,6 @@ label_metrics = pd.DataFrame({
 print("\n=== TOP 15 ETIQUETAS ===")
 print(label_metrics.head(15).to_string(index=False))
 
-# ── Guardar modelo ────────────────────────────────────────────────────────────
 save_dir = MODELS_DIR / "biobert_finetuned"
 save_dir.mkdir(parents=True, exist_ok=True)
 torch.save(model.state_dict(), save_dir / "model.pt")
@@ -212,7 +187,6 @@ tokenizer.save_pretrained(save_dir)
 pd.DataFrame({"label": label_names}).to_csv(save_dir / "label_names.csv", index=False)
 print(f"\nModelo guardado en: {save_dir}")
 
-# ── Gráficos ──────────────────────────────────────────────────────────────────
 fig, axes = plt.subplots(1, 3, figsize=(18, 5))
 fig.suptitle("Fine-tuning BioBERT — Resultados", fontsize=13)
 

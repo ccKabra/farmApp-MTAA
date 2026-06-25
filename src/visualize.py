@@ -1,8 +1,3 @@
-"""
-Etapa 7: Visualizaciones — grafo fármaco<->efecto, heatmap, red de co-ocurrencias.
-Output: outputs/figures/
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -21,7 +16,6 @@ MIN_REACTION_FREQ = 50
 all_reac = [r for row in df["reactions"].dropna() for r in row.split("|")]
 freq_reac = {r for r, n in Counter(all_reac).items() if n >= MIN_REACTION_FREQ}
 
-# Pares fármaco-reacción
 drug_reac_pairs = []
 for _, row in df.iterrows():
     drugs = row["drug"].split("|") if pd.notna(row["drug"]) else []
@@ -32,18 +26,15 @@ for _, row in df.iterrows():
 
 pair_counts = Counter(drug_reac_pairs)
 
-# Top fármacos y reacciones para visualizaciones manejables
 top_drugs = [d for d, _ in Counter(df["drug"].dropna().str.split("|").explode()).most_common(15)]
 top_reacs = [r for r, _ in Counter(all_reac).most_common(20) if r in freq_reac]
 
-# ── 1. Heatmap fármaco × reacción ─────────────────────────────────────────────
 print("Generando heatmap...")
 matrix = pd.DataFrame(0, index=top_drugs, columns=top_reacs)
 for (d, r), n in pair_counts.items():
     if d in matrix.index and r in matrix.columns:
         matrix.loc[d, r] = n
 
-# Normalizar por fármaco (frecuencia relativa)
 matrix_norm = matrix.div(matrix.sum(axis=1) + 1e-9, axis=0)
 
 fig, ax = plt.subplots(figsize=(18, 8))
@@ -57,17 +48,14 @@ plt.savefig(OUTPUTS_DIR / "figures" / "heatmap_drug_reaction.png", dpi=150)
 plt.close()
 print("  heatmap_drug_reaction.png")
 
-# ── 2. Grafo bipartito fármaco <-> reacción (networkx + matplotlib) ────────────
 print("Generando grafo bipartito...")
 G = nx.Graph()
 
-# Nodos
 for d in top_drugs[:10]:
     G.add_node(d, node_type="drug")
 for r in top_reacs[:15]:
     G.add_node(r, node_type="reaction")
 
-# Aristas con peso
 for (d, r), n in pair_counts.items():
     if d in G.nodes and r in G.nodes and n >= 5:
         G.add_edge(d, r, weight=n)
@@ -92,7 +80,6 @@ plt.savefig(OUTPUTS_DIR / "figures" / "grafo_bipartito.png", dpi=150)
 plt.close()
 print("  grafo_bipartito.png")
 
-# ── 3. Red de co-ocurrencia de reacciones ─────────────────────────────────────
 print("Generando red de co-ocurrencia de reacciones...")
 cooc = defaultdict(int)
 for _, row in df.iterrows():
@@ -127,7 +114,6 @@ plt.savefig(OUTPUTS_DIR / "figures" / "red_coocurrencia_reacciones.png", dpi=150
 plt.close()
 print("  red_coocurrencia_reacciones.png")
 
-# ── 4. Grafo interactivo Plotly (HTML) ────────────────────────────────────────
 print("Generando grafo interactivo Plotly...")
 edge_x, edge_y = [], []
 for u, v in G.edges():

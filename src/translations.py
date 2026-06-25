@@ -1,16 +1,3 @@
-"""
-Traduccion de la capa de presentacion (UI) ingles -> espanol.
-
-Los efectos adversos del modelo son terminos MedDRA en ingles. Aqui se traducen
-SOLO para mostrarlos al usuario: internamente (label_names, datos, metricas)
-todo sigue en ingles. Cubre las 98 etiquetas de
-models/biobert_finetuned/label_names.csv.
-
-Si una etiqueta no esta en el diccionario, translate_effect() devuelve el
-original en ingles (no rompe nada).
-"""
-
-# Efectos adversos MedDRA (ingles -> espanol). Mismas claves que label_names.
 EFFECTS_EN_ES = {
     "Abdominal Discomfort": "Malestar abdominal",
     "Abdominal Distension": "Distension abdominal",
@@ -112,13 +99,9 @@ EFFECTS_EN_ES = {
     "White Blood Cell Count Decreased": "Recuento de globulos blancos disminuido",
 }
 
-
 def translate_effect(name_en):
-    """Traduce un efecto adverso ingles -> espanol. Si no hay traduccion,
-    devuelve el original (no rompe la UI)."""
     return EFFECTS_EN_ES.get(name_en, name_en)
 
-
 def translate_effects_list(effects_en):
-    """Traduce una lista de efectos."""
+
     return [translate_effect(e) for e in effects_en]

@@ -1,11 +1,3 @@
-"""
-Etapa extra: Similitud coseno entre embeddings de farmacos.
-Aplica el modelo vectorial de la Unidad 2 sobre los embeddings BioBERT
-para encontrar farmacos semanticamente similares en el espacio de representacion.
-
-Output: outputs/figures/drug_similarity.png, outputs/drug_similarity.csv
-"""
-
 import pandas as pd
 import numpy as np
 import torch
@@ -29,13 +21,11 @@ def embed_text(texts):
     mask = enc["attention_mask"].unsqueeze(-1).float()
     return (out.last_hidden_state * mask).sum(1) / mask.sum(1)
 
-# Top 25 farmacos mas frecuentes
 df = pd.read_csv(DATA_PROCESSED / "dataset.csv", dtype=str)
 all_drugs = [d for row in df["drug"].dropna() for d in row.split("|")]
 top_drugs = [d for d, _ in Counter(all_drugs).most_common(25)]
 print(f"Calculando embeddings para {len(top_drugs)} farmacos...")
 
-# Embeber en batches de 5
 embeddings = []
 for i in range(0, len(top_drugs), 5):
     batch = top_drugs[i:i+5]
@@ -43,11 +33,9 @@ for i in range(0, len(top_drugs), 5):
     embeddings.append(emb)
 embeddings = np.vstack(embeddings)
 
-# Similitud coseno
 sim_matrix = cosine_similarity(embeddings)
 sim_df = pd.DataFrame(sim_matrix, index=top_drugs, columns=top_drugs)
 
-# Top pares mas similares (excluyendo diagonal)
 pairs = []
 for i in range(len(top_drugs)):
     for j in range(i+1, len(top_drugs)):
@@ -61,11 +49,9 @@ for d1, d2, sim in pairs[:15]:
 pd.DataFrame(pairs, columns=["drug_1", "drug_2", "cosine_similarity"])\
   .to_csv(OUTPUTS_DIR / "drug_similarity.csv", index=False)
 
-# ── Graficos ──────────────────────────────────────────────────────────────────
 fig, axes = plt.subplots(1, 2, figsize=(18, 8))
 fig.suptitle("Similitud coseno entre embeddings BioBERT de farmacos", fontsize=13)
 
-# Heatmap
 mask_diag = np.eye(len(top_drugs), dtype=bool)
 sns.heatmap(sim_df, ax=axes[0], cmap="RdYlGn", vmin=0.7, vmax=1.0,
             mask=mask_diag, xticklabels=True, yticklabels=True,
@@ -74,7 +60,6 @@ axes[0].set_title("Heatmap de similitud entre farmacos")
 axes[0].tick_params(axis="x", rotation=45, labelsize=7)
 axes[0].tick_params(axis="y", labelsize=7)
 
-# Top 15 pares
 pair_labels = [f"{d1[:15]}–{d2[:15]}" for d1, d2, _ in pairs[:15]]
 pair_sims   = [s for _, _, s in pairs[:15]]
 axes[1].barh(pair_labels[::-1], pair_sims[::-1], color="mediumseagreen")
